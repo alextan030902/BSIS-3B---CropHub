@@ -34,6 +34,12 @@ html
 	scroll-margin-top: 7rem;
 }
 
+.background img
+{
+	width: 100%;
+
+}
+
 body
 {
 	background: #5cb85c;
