@@ -107,7 +107,7 @@ body
     font-size: 20px;
     
 }
-.logo a:hover
+.logo :hover
 {
     color:orange;
 }
