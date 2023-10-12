@@ -371,9 +371,9 @@ cursor: pointer;
 	.header .navbar
 	{
 		position: absolute;
-		top: 130%;
+		top: 110%;
 		right: 5rem;
-		width: 5rem;
+		width: 30rem;
 		box-shadow: var(--box-shadow);
 		border-radius: .5rem;
 		background: #fff;
