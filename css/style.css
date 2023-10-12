@@ -370,6 +370,8 @@ cursor: pointer;
 		right: 2rem;
 		width: 2rem;
 		box-shadow: var(--box-shadow);
+		border-radius: .5rem;
+		background: #fff;
 	}
 }
 
