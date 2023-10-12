@@ -361,8 +361,13 @@ cursor: pointer;
 	}
 }
 
-@media (max-width: 991px)
+@media (max-width: 768px)
 {
+	#menu-btn
+	{
+	display: inline-block;
+	}
+
 	.header .navbar
 	{
 		position: absolute;
