@@ -361,7 +361,7 @@ cursor: pointer;
 	}
 }
 
-@media (max-width: 760px)
+@media (max-width: 754px)
 {
 	#menu-btn
 	{
@@ -371,9 +371,9 @@ cursor: pointer;
 	.header .navbar
 	{
 		position: absolute;
-		top: 110%;
+		top: 130%;
 		right: 5rem;
-		width: 2rem;
+		width: 5rem;
 		box-shadow: var(--box-shadow);
 		border-radius: .5rem;
 		background: #fff;
