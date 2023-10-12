@@ -354,7 +354,25 @@ cursor: pointer;
 	{
 	font-size: 55%;
 	}
+
+	.header
+	{
+		padding: 2rem;
+	}
 }
+
+@media (max-width: 991px)
+{
+	.header .navbar
+	{
+		position: absolute;
+		top: 110%;
+		right: 2rem;
+		width: 2rem;
+		box-shadow: var(--box-shadow);
+	}
+}
+
 @media (max-width: 450px)
 {
 	html
