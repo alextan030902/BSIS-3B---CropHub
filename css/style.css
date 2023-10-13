@@ -154,6 +154,12 @@ cursor: pointer;
 	display: none;
 }
 
+.header .navbar.login-form.active
+{
+	right: 2rem;
+	transition: .4s linear;
+}
+
 .header .search-form
 {
 	border: 0px solid;
