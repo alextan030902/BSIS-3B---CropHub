@@ -372,8 +372,8 @@ cursor: pointer;
 	{
 		position: absolute;
 		top: 110%;
-		right: 2rem;
-		width: 35rem;
+		right: 3rem;
+		width: 30rem;
 		box-shadow: var(--box-shadow);
 		border-radius: .5rem;
 		background: #fff;
