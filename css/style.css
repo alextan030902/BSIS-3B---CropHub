@@ -154,7 +154,7 @@ cursor: pointer;
 	display: none;
 }
 
-.header .navbar.login-form.active
+.header .navbar.active 
 {
 	right: 2rem;
 	transition: .4s linear;
