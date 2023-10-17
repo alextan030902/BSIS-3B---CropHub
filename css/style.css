@@ -354,6 +354,20 @@ cursor: pointer;
 
 
 /* media queires */
+
+@media (max-width: 1214px)
+{
+	html
+	{
+	font-size: 55%;
+	}
+
+	.header
+	{
+		padding: 2rem;
+	}
+}
+
 @media (max-width: 991px)
 {
 	html
@@ -367,7 +381,8 @@ cursor: pointer;
 	}
 }
 
-@media (max-width: 768px)
+
+@media (max-width: 769px)
 {
 	#menu-btn
 	{
