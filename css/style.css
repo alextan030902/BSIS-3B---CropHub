@@ -368,16 +368,30 @@ cursor: pointer;
 	}
 }
 
-@media (max-width: 991px)
+@media (max-width: 770px)
 {
-	html
+	#menu-btn
 	{
-	font-size: 55%;
+	display: inline-block;
 	}
 
-	.header
+	.header .navbar
 	{
-		padding: 2rem;
+		position: absolute;
+		top: 110%;
+		right: -110%;
+		width: 30rem;
+		box-shadow: var(--box-shadow);
+		border-radius: .5rem;
+		background: #fff;
+	}
+
+	.header .navbar a
+	{
+		font-size: 2rem; 
+		margin: 2rem 2.5rem;
+		display: block;
+		
 	}
 }
 
