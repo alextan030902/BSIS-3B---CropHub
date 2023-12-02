@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crophub Ecommerce</title>
 
-   
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="linear-gradient(to bottom, #61daff, #656bff)">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.6.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
+ 
 </head>
 <!-- Header Section -->
 <header>
@@ -57,139 +61,383 @@
     </div>
     <div class="px-3 py-2 border-bottom mb-3">
       <div class="container d-flex flex-wrap justify-content-center">
-         <!-- Search Form -->
-    <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search">
-        <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-    </form>
 
+      <!-- Search Form -->
+      <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+         <input class="form-control mr-sm-2" type="search" id="search_field"  placeholder="Search" aria-label="Search">
+      </form>
 
+     <div class="text-end">
+       <!-- Your HTML content -->
+       <button type="button" class="btn btn-outline-warning" id="wishlistButton">
+         <i class="bi bi-heart"></i> 
+       </button>
+       <button type="button" class="btn btn-success my-2 my-sm-0" data-toggle="modal"data-target="#staticBackdrop">
+         <i class="fas fa-shopping-cart total-count"></i>
+      </button>
+      <button type="button" class="btn btn-primary" id="loginButton">Login</button>
 
-        <div class="text-end">
-          <!-- Your HTML content -->
-          <button type="button" class="btn btn-outline-warning" id="wishlistButton">
-            <i class="bi bi-heart"></i> 
-          </button>
-          <button type="button" class="btn btn-success" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                      <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"></path>
-              </svg>Cart
-          </button>
-
-<!-- Your offcanvas -->
-<div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
-  <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="cartOffcanvasLabel">Shopping Cart</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    
-
-
-<!-- Your other HTML content -->
-
-        <button type="button" class="btn btn-primary" id="loginButton">Log in</button>
-        </div>
+      <!-- Your offcanvas -->
+      <!-- Modal -->
+      <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Your Cart</h5>
+       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+       </button>
       </div>
-    </div>
-  </header>
+      <div class="modal-body">
+       <table class="show-cart table">
+
+       </table>
+       <div class="grand-total">Total price: ₹<span class="total-cart"></span></div>
+     </div>
+     <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-danger"id="checkoutButton">Checkout</button>
+      
+     </div>
+ </div>
+</div>
+</div>
+ </div>
+</header>
 <!-- Header End Section -->
 <!-- Body Section -->
+<main>
+  <section>
+     <div class="featured-area pt-100 pb-70">
+        <div class="container">
+           <div class="tab featured-tab-area">
+              <div class="row justify-content-center">
 
-<body>
-  <div class="album py-5 bg-body-tertiary">
-    <div class="container">
+                 <div class="col-lg-4 col-md-8">
+                   
+                 </div>
+              </div>
+              <div class="tab_content current active pt-45">
+                 
+                 <div class="tabs_item current">
+                    <div class="row justify-content-center">
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/men-1.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Oxford Shirts</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 1200 </h4>
+                                   <span>(4.9)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="Oxford" data-price="1200" class="default-btn border-radius-5"> Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/men-4.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">T-shirt</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 700 </h4>
+                                   <span>(3.9)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="T-shirt" data-price="700" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/women-4.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Wrap around</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 4059 </h4>
+                                   <span>(4.4)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="Wrap" data-price="4059" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/watch-4.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Titan Power</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 459 </h4>
+                                   <span>(4.4)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="titan" data-price="459" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                 <div class="tabs_item">
+                    <div class="row justify-content-center">
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/men-1.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Oxford Shirts</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 1200 </h4>
+                                   <span>(4.9)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="Oxford" data-price="1200" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/men-2.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Short-Sleeve Shirt</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 800 </h4>
+                                   <span>(4.9)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="Short-Sleeve" data-price="800" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/men-3.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Cuban Collar Shirt</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 499 </h4>
+                                   <span>(4.9)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="Cuban" data-price="499" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/men-4.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">T-shirt</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 700 </h4>
+                                   <span>(3.9)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="T-shirt" data-price="700" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                 <div class="tabs_item">
+                    <div class="row justify-content-center">
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/women-1.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Tunic </a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 459 </h4>
+                                   <span>(4.4)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="Tunic" data-price="459" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/women-2.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Culotte dress</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 2459 </h4>
+                                   <span>(4.4)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="Culotte" data-price="2459" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/women-3.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Babydoll</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 1159 </h4>
+                                   <span>(4.0)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="Babydoll" data-price="1159" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/women-4.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Wrap around</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 4059 </h4>
+                                   <span>(4.4)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="Wrap" data-price="4059" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                 <div class="tabs_item">
+                    <div class="row justify-content-center">
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/watch-1.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Huawei Watch Buds	</a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 4059 </h4>
+                                   <span>(4.4)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="Huawei" data-price="4059" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="col-lg-3 col-md-6">
+                          <div class="featured-item">
+                             <div class="featured-item-img">
+                                <a href="#">
+                                   <img src="img/watch-2.jpg" alt="Images">
+                                </a>
+                             </div>
+                             <div class="content">
+                                <h3><a href="#">Fire Boltt Dazzle </a></h3>
+                                <hr>
+                                <div class="content-in">
+                                   <h4>₹ 1999 </h4>
+                                   <span>(4.4)<i class="fa fa-star"></i></span>
+                                </div>
+                                <hr>
+                                <div class="featured-content-list">
+                                   <button type="button" data-name="FireBoltt" data-price="1999" class="default-btn border-radius-5">Add to cart</button>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
 
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div class="col">
-          <div class="card shadow-sm">
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
-              <title>New Image Placeholder</title>
-              <!-- Center the image horizontally and vertically -->
-              <image href="https://healthjade.com/wp-content/uploads/2017/10/apple-fruit.jpg" width="60%" height="100%" x="20%" y="0" preserveAspectRatio="xMidYMid slice"></image>
-            </svg>
-                     
-             <div class="card-body">
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="d-grid gap-2 d-md-block">
-                  <button class="btn btn-primary" type="button" onclick="addToCart()">Add to cart</button>
-                  <button class="btn btn-primary" type="button" onclick="addToWishlist()">Add to wishlist</button>
-                </div>
+                 <p id="not_found"></p>
               </div>
-            </div>
-          </div>
+           </div>
         </div>
-        <div class="col">
-          <div class="card shadow-sm">
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-            <div class="card-body">
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <button class="btn btn-primary" type="button">Add to cart</button>
-                <button class="btn btn-primary" type="button">Add to wishlist</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card shadow-sm">
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-            <div class="card-body">
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="d-grid gap-2 d-md-block">
-                  <button class="btn btn-primary" type="button">Add to cart</button>
-                  <button class="btn btn-primary" type="button">Add to wishlist</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card shadow-sm">
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-            <div class="card-body">
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="d-grid gap-2 d-md-block">
-                  <button class="btn btn-primary" type="button">Add to cart</button>
-                  <button class="btn btn-primary" type="button">Add to wishlist</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card shadow-sm">
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-            <div class="card-body">
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="d-grid gap-2 d-md-block">
-                  <button class="btn btn-primary" type="button">Add to cart</button>
-                  <button class="btn btn-primary" type="button">Add to wishlist</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card shadow-sm">
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-            <div class="card-body">
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="d-grid gap-2 d-md-block">
-                  <button class="btn btn-primary" type="button">Add to cart</button>
-                  <button class="btn btn-primary" type="button">Add to wishlist</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+     </div>
+  </section>
+</main>
 
 
 <!-- Body End Section -->
@@ -216,10 +464,11 @@
 
 
 <!-- Script Section -->
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="script.js"></script>
-
+<script src="script.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <!-- Script End Section -->
 </body>
 </html>
