@@ -297,3 +297,24 @@ if (searchField) {
         });
     });
 }
+// Checkout
+
+function submitForm() {
+  var firstName = document.getElementById('firstName').value;
+  var lastName = document.getElementById('lastName').value;
+  var email = document.getElementById('inputEmail').value;
+  var address = document.getElementById('inputAddress').value;
+  var city = document.getElementById('inputCity').value;
+  var paymentMethod = document.getElementById('inputState').value;
+  var agreeToTerms = document.getElementById('gridCheck').checked;
+
+  // You can now use these variables as needed, for example, send them to a server using AJAX.
+
+  console.log('First Name: ' + firstName);
+  console.log('Last Name: ' + lastName);
+  console.log('Email: ' + email);
+  console.log('Address: ' + address);
+  console.log('City: ' + city);
+  console.log('Payment Method: ' + paymentMethod);
+  console.log('Agree to Terms: ' + agreeToTerms);
+}
