@@ -137,8 +137,9 @@
                               </div>
                               <hr>
                               <div class="featured-content-list">
-                                 <button type="button" data-name="Oxford" data-price="1200" class="default-btn border-radius-5"> Add to cart</button>
-                              </div>
+                                 <button type="button" class="default-btn border-radius-5" id="addToCartButton" data-name="Oxford" data-price="1200" data-productId="1">
+                                    Add to cart
+                                </button>                             </div>
                            </div>
                         </div>
                      </div>
@@ -158,8 +159,9 @@
                               </div>
                               <hr>
                               <div class="featured-content-list">
-                                 <button type="button" data-name="Oxford" data-price="1200" class="default-btn border-radius-5"> Add to cart</button>
-                              </div>
+                                 <button type="button" class="default-btn border-radius-5" id="addToCartButton" data-name="Oxford" data-price="1200" data-productId="2">
+                                    Add to cart
+                                </button>                             </div>
                            </div>
                         </div>
                      </div>
@@ -179,31 +181,35 @@
                               </div>
                               <hr>
                               <div class="featured-content-list">
-                                 <button type="button" data-name="Oxford" data-price="1200" class="default-btn border-radius-5"> Add to cart</button>
-                              </div>
+                                 <button type="button" class="default-btn border-radius-5" id="addToCartButton" data-name="Oxford" data-price="1200" data-productId="3">
+                                    Add to cart
+                                </button>                             </div>
                            </div>
                         </div>
                      </div>
                      <div class="col-lg-3 col-md-6">
                         <div class="featured-item">
                            <div class="featured-item-img">
-                              <a href="#">
-                                 <img src="img/men-1.jpg" alt="Images">
-                              </a>
+                               <a href="#">
+                                   <img src="img/men-1.jpg" alt="Images">
+                               </a>
                            </div>
                            <div class="content">
-                              <h3><a href="#">Oxford Shirts</a></h3>
-                              <hr>
-                              <div class="content-in">
-                                 <h4>₹ 1200 </h4>
-                                 <span>(4.9)<i class="fa fa-star"></i></span>
-                              </div>
-                              <hr>
-                              <div class="featured-content-list">
-                                 <button type="button" data-name="Oxford" data-price="1200" class="default-btn border-radius-5"> Add to cart</button>
-                              </div>
+                               <h3><a href="#">Oxford Shirts</a></h3>
+                               <hr>
+                               <div class="content-in">
+                                   <h4>₹ 1200 </h4>
+                                   <span>(4.9)<i class="fa fa-star"></i></span>
+                               </div>
+                               <hr>
+                               <div class="featured-content-list">
+                                   <!-- Pass product details as data attributes -->
+                                   <button type="button" class="default-btn border-radius-5" id="addToCartButton" data-name="Oxford" data-price="1200" data-productId="4">
+                                    Add to cart
+                                </button>
+                               </div>
                            </div>
-                        </div>
+                       </div>
                      </div>
                      <!-- ... (other items) ... -->
                   </div>
@@ -240,7 +246,7 @@
 
 
 <!-- Script Section -->
-<script src="js/script.js"></script>
+<script type="module" src="js/script.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>

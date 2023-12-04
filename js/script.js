@@ -3,8 +3,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebas
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
 
-
-
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -24,339 +22,201 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 
 
-function writeUserData(userId, name, email, imageUrl) {
-  set(ref(db, 'users/' + userId), {
-    username: name,
-    email: email,
-    profile_picture : imageUrl
+document.addEventListener('DOMContentLoaded', function () {
+  const addToCartButtons = document.querySelectorAll('#addToCartButton');
+
+  addToCartButtons.forEach(button => {
+      button.addEventListener('click', function () {
+         
+          const name = this.getAttribute('data-name');
+          const price = this.getAttribute('data-price');
+          const productId = this.getAttribute('data-productId');
+
+          // Call the addtoCart function with the extracted data
+          addtoCart(productId, name, price);
+      });
+  });
+});
+
+// Your original addtoCart function
+function addtoCart(productId, name, price) {
+  const db = getDatabase();
+  set(ref(db, 'products/' + productId), {
+      productName: name,
+      price: price,
   });
 }
-function writeUserData(userId, name, email, imageUrl) {
-  set(ref(db, 'products/' + userId), {
-    username: name,
-    email: email,
-    profile_picture : imageUrl
-  });
-}
 
+  // Function to add an item to the cart
+  function addToCart(itemName, itemPrice) {
+    var cartItem = {
+      name: itemName,
+      price: itemPrice
+    };
 
+    // Check if localStorage supports JSON
+    if (typeof Storage !== "undefined") {
+      // Retrieve the cart items from localStorage
+      var cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-// var loginButton = document.getElementById('loginButton');
+      // Add the new item to the cart
+      cart.push(cartItem);
 
-//     // Add a click event listener to the button
-//     loginButton.addEventListener('click', function() {
-//         // Redirect to another HTML file
-//         window.location.href = 'signup.html';
-//     });
+      // Save the updated cart back to localStorage
+      localStorage.setItem("cart", JSON.stringify(cart));
 
-// var checkoutButton = document.getElementById('checkoutButton');
+      // Update the cart modal
+      updateCartModal();
+    } else {
+      alert("Sorry, your browser does not support Web Storage. Please use a different browser.");
+    }
+  }
 
-//     // Add a click event listener to the button
-//     checkoutButton.addEventListener('click', function() {
-//         // Redirect to another HTML file
-//         window.location.href = 'checkout.html';
-//     });    
-
-//     // Search Function
-//     function searchForm(event) {
-//         event.preventDefault(); // Prevents the default form submission
-//         var searchInputValue = document.getElementById('searchInput').value;
-//         alert('Search query: ' + searchInputValue);
-//         // You can perform additional actions here, such as sending the search query to a server.
-//     }
-
-//     // Search,Cart, Function
-    
-
-//     var shoppingCart = (function () {
-
-//         cart = [];
-    
-//         function Item(name, price, count) {
-//           this.name = name;
-//           this.price = price;
-//           this.count = count;
-//         }
-    
-//         // Save cart
-//         function saveCart() {
-//           localStorage.setItem('shoppingCart', JSON.stringify(cart));
-//         }
-    
-//         // Load cart
-//         function loadCart() {
-//           cart = JSON.parse(localStorage.getItem('shoppingCart'));
-//         }
-//         if (localStorage.getItem("shoppingCart") != null) {
-//           loadCart();
-//         }
-    
-    
-//         var obj = {};
-    
-//         // Add to cart
-//         obj.addItemToCart = function (name, price, count) {
-//           for (var item in cart) {
-//             if (cart[item].name === name) {
-//               cart[item].count++;
-//               saveCart();
-//               return;
-//             }
-//           }
-//           var item = new Item(name, price, count);
-//           cart.push(item);
-//           saveCart();
-//         }
-//         // Set count from item
-//         obj.setCountForItem = function (name, count) {
-//           for (var i in cart) {
-//             if (cart[i].name === name) {
-//               cart[i].count = count;
-//               break;
-//             }
-//           }
-//         };
-//         // Remove item from cart
-//         obj.removeItemFromCart = function (name) {
-//           for (var item in cart) {
-//             if (cart[item].name === name) {
-//               cart[item].count--;
-//               if (cart[item].count === 0) {
-//                 cart.splice(item, 1);
-//               }
-//               break;
-//             }
-//           }
-//           saveCart();
-//         }
-    
-//         // Remove all items from cart
-//         obj.removeItemFromCartAll = function (name) {
-//           for (var item in cart) {
-//             if (cart[item].name === name) {
-//               cart.splice(item, 1);
-//               break;
-//             }
-//           }
-//           saveCart();
-//         }
-    
-//         // Clear cart
-//         obj.clearCart = function () {
-//           cart = [];
-//           saveCart();
-//         }
-    
-//         // Count cart 
-//         obj.totalCount = function () {
-//           var totalCount = 0;
-//           for (var item in cart) {
-//             totalCount += cart[item].count;
-//           }
-//           return totalCount;
-//         }
-    
-//         // Total cart
-//         obj.totalCart = function () {
-//           var totalCart = 0;
-//           for (var item in cart) {
-//             totalCart += cart[item].price * cart[item].count;
-//           }
-//           return Number(totalCart.toFixed(2));
-//         }
-    
-//         // List cart
-//         obj.listCart = function () {
-//           var cartCopy = [];
-//           for (i in cart) {
-//             item = cart[i];
-//             itemCopy = {};
-//             for (p in item) {
-//               itemCopy[p] = item[p];
-//             }
-//             itemCopy.total = Number(item.price * item.count).toFixed(2);
-//             cartCopy.push(itemCopy)
-//           }
-//           return cartCopy;
-//         }
-//         return obj;
-//       })();
-    
-    
-      
-//       // Add item
-//         document.querySelectorAll('.default-btn').forEach(function(btn) {
-//         btn.addEventListener('click', function(event) {
-//       // alert('working');
-//             event.preventDefault();
-//       var name = this.getAttribute('data-name');
-//       var price = Number(this.getAttribute('data-price'));
-//       shoppingCart.addItemToCart(name, price, 1);
-//       displayCart();
-//     });
-//   });
+  var shoppingCart = (function () {
+    var cart = [];
   
-    
-//     //   // Clear items
-//     //   $('.clear-cart').click(function () {
-//     //     shoppingCart.clearCart();
-//     //     displayCart();
-//     //   });
-    
-    
-//       // Assuming shoppingCart and displayCart functions are defined elsewhere
+    function Item(name, price, count) {
+      this.name = name;
+      this.price = price;
+      this.count = count;
+    }
+  
+    // Save cart
+    function saveCart() {
+      localStorage.setItem('shoppingCart', JSON.stringify(cart));
+    }
+  
+    // Load cart
+    function loadCart() {
+      cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+    }
+  
+    if (localStorage.getItem('shoppingCart') !== null) {
+      loadCart();
+    }
+  
+    var obj = {};
+  
+    // Add to cart
+    obj.addItemToCart = function (name, price, count) {
+      var existingItem = cart.find(item => item.name === name);
+  
+      if (existingItem) {
+        existingItem.count += count;
+      } else {
+        var newItem = new Item(name, price, count);
+        cart.push(newItem);
+      }
+  
+      saveCart();
+    };
+  
+    // Set count from item
+    obj.setCountForItem = function (name, count) {
+      var item = cart.find(item => item.name === name);
+      if (item) {
+        item.count = count;
+        saveCart();
+      }
+    };
+  
+    // Remove item from cart
+    obj.removeItemFromCart = function (name) {
+      var itemIndex = cart.findIndex(item => item.name === name);
+  
+      if (itemIndex !== -1) {
+        cart[itemIndex].count--;
+  
+        if (cart[itemIndex].count === 0) {
+          cart.splice(itemIndex, 1);
+        }
+  
+        saveCart();
+      }
+    };
+  
+    // Remove all items from cart
+    obj.removeItemFromCartAll = function (name) {
+      cart = cart.filter(item => item.name !== name);
+      saveCart();
+    };
+  
+    // Clear cart
+    obj.clearCart = function () {
+      cart = [];
+      saveCart();
+    };
+  
+    // Count cart
+    obj.totalCount = function () {
+      return cart.reduce((totalCount, item) => totalCount + item.count, 0);
+    };
+  
+    // Total cart
+    obj.totalCart = function () {
+      return cart.reduce((totalCart, item) => totalCart + item.price * item.count, 0).toFixed(2);
+    };
+  
+    // List cart
+    obj.listCart = function () {
+      return cart.map(item => ({
+        name: item.name,
+        price: item.price,
+        count: item.count,
+        total: (item.price * item.count).toFixed(2),
+      }));
+    };
+  
+    return obj;
+  })();
+  
+  // Rest of your code remains unchanged
+  
 
-// // Attach event listener to the element with class 'show-cart'
-// document.querySelector('.show-cart').addEventListener('change', function (event) {
-//     // Get the name and count from the data attributes of the target element
-//     var name = event.target.getAttribute('data-name');
-//     var count = Number(event.target.value);
+// document.addEventListener('DOMContentLoaded', function () {
+//   const form = document.querySelector('form');
 
-//     // Call the setCountForItem function with the obtained values
-//     shoppingCart.setCountForItem(name, count);
+//   form.addEventListener('submit', function (event) {
+//       event.preventDefault();
 
-//     // Call the displayCart function to update the cart display
-//     displayCart();
+//       const email = document.querySelector('input[name="email"]').value;
+//       const password = document.querySelector('input[name="pass"]').value;
+
+//       // Perform client-side validation (you can add more validation as needed)
+//       if (!email || !password) {
+//           alert('Please fill in all fields');
+//           return;
+//       }
+
+//       // Perform asynchronous request to the server using Fetch API
+//       fetch('your_server_script.php', {
+//           method: 'POST',
+//           headers: {
+//               'Content-Type': 'application/x-www-form-urlencoded',
+//           },
+//           body: new URLSearchParams({
+//               email: email,
+//               pass: password,
+//               submit: true,
+//           }),
+//       })
+//       .then(response => response.json())
+//       .then(data => {
+//           // Handle the response from the server
+//           if (data.success) {
+//               alert('Login successful');
+//               // Redirect to the appropriate page based on user type
+//               if (data.userType === 'admin') {
+//                   window.location.href = 'admin_page.html';
+//               } else if (data.userType === 'user') {
+//                   window.location.href = 'index.html';
+//               }
+//           } else {
+//               alert(data.message);
+//           }
+//       })
+//       .catch(error => {
+//           console.error('Error:', error);
+//       });
+//   });
 // });
-
-// // Call the displayCart function initially
-// displayCart();
-
-// // Define the displayCart function
-// function displayCart() {
-//     var cartArray = shoppingCart.listCart();
-//     var output = "";
-
-//     // Iterate over items in the cartArray
-//     for (var i in cartArray) {
-//         output += "<tr>" +
-//             "<td>" + cartArray[i].name + "</td>" +
-//             "<td>(" + cartArray[i].price + ")</td>" +
-//             "<td><div class='input-group'>" +
-//             "<input type='number' class='item-count form-control' data-name='" + cartArray[i].name + "' value='" + cartArray[i].count + "'>" +
-//             "</div></td>" +
-//             "<td><button class='delete-item btn btn-danger' data-name=" + cartArray[i].name + ">X</button></td>" +
-//             " = " +
-//             "<td>" + cartArray[i].total + "</td>" +
-//             "</tr>";
-//     }
-
-//     // Update HTML content of elements with the specified classes
-//     document.querySelector('.show-cart').innerHTML = output;
-//     document.querySelector('.total-cart').innerHTML = shoppingCart.totalCart();
-//     document.querySelector('.total-count').innerHTML = shoppingCart.totalCount();
-// }
-
-    
-//       // Delete item button
-    
-//       document.querySelector('.show-cart').addEventListener('click', function (event) {
-//         if (event.target.classList.contains('delete-item')) {
-//             var name = event.target.getAttribute('data-name');
-//             shoppingCart.removeItemFromCartAll(name);
-//             displayCart();
-//         }
-//     });
-    
-//       // Item count input
-//       document.querySelector('.show-cart').addEventListener('change', function(event) {
-//         if (event.target.classList.contains('item-count')) {
-//             var name = event.target.getAttribute('data-name');
-//             var count = Number(event.target.value);
-//             shoppingCart.setCountForItem(name, count);
-//             displayCart();
-//         }
-//     });
-    
-//     displayCart();
-    
-    
-//     //////// ui script start /////////
-//     // Tabs Single Page
-//  // Add classes to tabs
-// var tabsContainer = document.querySelector('.tab ul.tabs');
-// if (tabsContainer) {
-//     tabsContainer.classList.add('active');
-
-//     var firstTab = tabsContainer.querySelector('li:eq(0)');
-//     if (firstTab) {
-//         firstTab.classList.add('current');
-//     }
-// }
-
-// // Handle tab click event
-// var tabLinks = document.querySelectorAll('.tab ul.tabs li a');
-// tabLinks.forEach(function (link) {
-//     link.addEventListener('click', function (event) {
-//         var tab = this.closest('.tab');
-//         var index = this.closest('li').index();
-
-//         // Remove 'current' class from all tabs
-//         var tabItems = tab ? tab.querySelectorAll('ul.tabs > li') : [];
-//         tabItems.forEach(function (tabItem) {
-//             tabItem.classList.remove('current');
-//         });
-
-//         // Add 'current' class to the clicked tab
-//         var closestLi = this.closest('li');
-//         if (closestLi) {
-//             closestLi.classList.add('current');
-//         }
-
-//         // Hide all tabs content except the clicked one
-//         var tabContentItems = tab ? tab.querySelectorAll('.tab_content div.tabs_item') : [];
-//         tabContentItems.forEach(function (tabContentItem, i) {
-//             tabContentItem.style.display = i === index ? 'block' : 'none';
-//         });
-
-//         event.preventDefault();
-//     });
-// });
-
-// // Search function
-// var searchField = document.getElementById('search_field');
-// if (searchField) {
-//     searchField.addEventListener('keyup', function () {
-//         var value = this.value.toLowerCase();
-//         var patt = new RegExp(value, 'i');
-
-//         var colElements = document.querySelectorAll('.tab_content .col-lg-3');
-//         colElements.forEach(function (table) {
-//             var featuredItem = table.querySelector('.featured-item');
-//             var featuredItemText = featuredItem ? featuredItem.textContent.toLowerCase() : '';
-
-//             if (!(featuredItemText.search(patt) >= 0)) {
-//                 table.style.display = 'none';
-//             }
-
-//             if (table.textContent.toLowerCase().search(patt) >= 0) {
-//                 table.style.display = 'block';
-//                 document.getElementById('not_found').style.display = 'none';
-//             } else {
-//                 document.getElementById('not_found').innerHTML = 'Product not found..';
-//                 document.getElementById('not_found').style.display = 'block';
-//             }
-//         });
-//     });
-// }
-// // Checkout
-
-// function submitForm() {
-//   var firstName = document.getElementById('firstName').value;
-//   var lastName = document.getElementById('lastName').value;
-//   var email = document.getElementById('inputEmail').value;
-//   var address = document.getElementById('inputAddress').value;
-//   var city = document.getElementById('inputCity').value;
-//   var paymentMethod = document.getElementById('inputState').value;
-//   var agreeToTerms = document.getElementById('gridCheck').checked;
-
-//   // You can now use these variables as needed, for example, send them to a server using AJAX.
-
-//   console.log('First Name: ' + firstName);
-//   console.log('Last Name: ' + lastName);
-//   console.log('Email: ' + email);
-//   console.log('Address: ' + address);
-//   console.log('City: ' + city);
-//   console.log('Payment Method: ' + paymentMethod);
-//   console.log('Agree to Terms: ' + agreeToTerms);
-// }
