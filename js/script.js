@@ -47,128 +47,29 @@ function addtoCart(productId, name, price) {
   });
 }
 
-  // Function to add an item to the cart
-  function addToCart(itemName, itemPrice) {
-    var cartItem = {
-      name: itemName,
-      price: itemPrice
-    };
 
-    // Check if localStorage supports JSON
-    if (typeof Storage !== "undefined") {
-      // Retrieve the cart items from localStorage
-      var cart = JSON.parse(localStorage.getItem("cart")) || [];
+// search function
+$('#search_field').on('keyup', function() {
+  var value = $(this).val();
+  var patt = new RegExp(value, "i");
 
-      // Add the new item to the cart
-      cart.push(cartItem);
-
-      // Save the updated cart back to localStorage
-      localStorage.setItem("cart", JSON.stringify(cart));
-
-      // Update the cart modal
-      updateCartModal();
+  $('.tab_content').find('.col-lg-3').each(function() {
+    var $table = $(this);
+    
+    if (!($table.find('.featured-item').text().search(patt) >= 0)) {
+      $table.not('.featured-item').hide();
+    }
+    if (($table.find('.col-lg-3').text().search(patt) >= 0)) {
+      $(this).show();
+      document.getElementById('not_found').style.display = 'none';
     } else {
-      alert("Sorry, your browser does not support Web Storage. Please use a different browser.");
+      document.getElementById("not_found").innerHTML = " Product not found..";
+      document.getElementById('not_found').style.display = 'block';
     }
-  }
-
-  var shoppingCart = (function () {
-    var cart = [];
+    
+  });
   
-    function Item(name, price, count) {
-      this.name = name;
-      this.price = price;
-      this.count = count;
-    }
-  
-    // Save cart
-    function saveCart() {
-      localStorage.setItem('shoppingCart', JSON.stringify(cart));
-    }
-  
-    // Load cart
-    function loadCart() {
-      cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
-    }
-  
-    if (localStorage.getItem('shoppingCart') !== null) {
-      loadCart();
-    }
-  
-    var obj = {};
-  
-    // Add to cart
-    obj.addItemToCart = function (name, price, count) {
-      var existingItem = cart.find(item => item.name === name);
-  
-      if (existingItem) {
-        existingItem.count += count;
-      } else {
-        var newItem = new Item(name, price, count);
-        cart.push(newItem);
-      }
-  
-      saveCart();
-    };
-  
-    // Set count from item
-    obj.setCountForItem = function (name, count) {
-      var item = cart.find(item => item.name === name);
-      if (item) {
-        item.count = count;
-        saveCart();
-      }
-    };
-  
-    // Remove item from cart
-    obj.removeItemFromCart = function (name) {
-      var itemIndex = cart.findIndex(item => item.name === name);
-  
-      if (itemIndex !== -1) {
-        cart[itemIndex].count--;
-  
-        if (cart[itemIndex].count === 0) {
-          cart.splice(itemIndex, 1);
-        }
-  
-        saveCart();
-      }
-    };
-  
-    // Remove all items from cart
-    obj.removeItemFromCartAll = function (name) {
-      cart = cart.filter(item => item.name !== name);
-      saveCart();
-    };
-  
-    // Clear cart
-    obj.clearCart = function () {
-      cart = [];
-      saveCart();
-    };
-  
-    // Count cart
-    obj.totalCount = function () {
-      return cart.reduce((totalCount, item) => totalCount + item.count, 0);
-    };
-  
-    // Total cart
-    obj.totalCart = function () {
-      return cart.reduce((totalCart, item) => totalCart + item.price * item.count, 0).toFixed(2);
-    };
-  
-    // List cart
-    obj.listCart = function () {
-      return cart.map(item => ({
-        name: item.name,
-        price: item.price,
-        count: item.count,
-        total: (item.price * item.count).toFixed(2),
-      }));
-    };
-  
-    return obj;
-  })();
+})();
   
   // Rest of your code remains unchanged
   
