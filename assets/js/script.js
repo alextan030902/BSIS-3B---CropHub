@@ -49,27 +49,34 @@ function addtoCart(productId, name, price) {
 
 
 // search function
-$('#search_field').on('keyup', function() {
-  var value = $(this).val();
-  var patt = new RegExp(value, "i");
+$(document).ready(function() {
+  $('#search_field').on('keyup', function() {
+    var value = $(this).val();
+    var patt = new RegExp(value, "i");
 
-  $('.tab_content').find('.col-lg-3').each(function() {
-    var $table = $(this);
-    
-    if (!($table.find('.featured-item').text().search(patt) >= 0)) {
-      $table.not('.featured-item').hide();
-    }
-    if (($table.find('.col-lg-3').text().search(patt) >= 0)) {
-      $(this).show();
-      document.getElementById('not_found').style.display = 'none';
-    } else {
-      document.getElementById("not_found").innerHTML = " Product not found..";
+    $('.tab_content').find('.col-lg-3').each(function() {
+      var $table = $(this);
+      var $featuredItem = $table.find('.featured-item');
+
+      if (!$featuredItem.text().match(patt)) {
+        $table.hide();
+      } else {
+        $table.show();
+        document.getElementById('not_found').style.display = 'none';
+      }
+    });
+
+    var visibleItems = $('.tab_content .col-lg-3:visible');
+
+    if (visibleItems.length === 0) {
+      document.getElementById("not_found").innerHTML = "Product not found.";
       document.getElementById('not_found').style.display = 'block';
+    } else {
+      document.getElementById('not_found').style.display = 'none';
     }
-    
   });
-  
-})();
+});
+
   
   // Rest of your code remains unchanged
   
