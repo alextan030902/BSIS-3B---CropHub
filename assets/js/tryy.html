@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <!-- Add your CSS and other dependencies here -->
+</head>
+<body>
+
+    <!-- Your product section with "Add to cart" buttons -->
+
+    <div class="modal fade" id="cartModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="cartModalLabel">Your Cart</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul id="cartItems" class="list-group">
+                        <!-- Cart items will be dynamically added here -->
+                    </ul>
+                    <p>Total: ₹<span id="cartTotal">0.00</span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" onclick="checkout()">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTotal(price) {
+            var cartTotalElement = document.getElementById('cartTotal');
+            var currentTotal = parseFloat(cartTotalElement.textContent);
+            var newTotal = (currentTotal + price).toFixed(2);
+            cartTotalElement.textContent = newTotal;
+        }
+
+        function addToCart(productName, productPrice) {
+            // Simulating adding an item to the cart
+            var listItem = document.createElement('li');
+            listItem.className = 'list-group-item';
+            listItem.textContent = productName + ' - ₹' + productPrice.toFixed(2);
+            document.getElementById('cartItems').appendChild(listItem);
+
+            // Updating the total price in the cart
+            updateTotal(productPrice);
+
+            // Show the cart modal
+            $('#cartModal').modal('show');
+        }
+
+        function checkout() {
+            // Implement your checkout logic here
+            alert('Implement your checkout logic here.');
+        }
+    </script>
+
+    <!-- Add your JavaScript dependencies here -->
+
+</body>
+</html>

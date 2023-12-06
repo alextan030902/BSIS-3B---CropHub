@@ -46,7 +46,124 @@ function addtoCart(productId, name, price) {
       price: price,
   });
 }
+document.addEventListener('DOMContentLoaded', function () {
+  var addToCartButtons = document.querySelectorAll('.addToCartButton');
+  var totalCartPrice = 0;
+  var cartItems = []; // Array to store cart items with quantity
 
+  addToCartButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      var productName = button.getAttribute('data-name');
+      var productPrice = parseFloat(button.getAttribute('data-price'));
+      var productId = button.getAttribute('data-productId');
+
+      // Check if the product is already in the cart
+      var existingCartItem = cartItems.find(item => item.productId === productId);
+
+      if (existingCartItem) {
+        // If the product is already in the cart, increment the quantity
+        existingCartItem.quantity++;
+        existingCartItem.totalPrice = existingCartItem.quantity * productPrice;
+      } else {
+        // If the product is not in the cart, add it with quantity 1
+        cartItems.push({
+          productId: productId,
+          productName: productName,
+          quantity: 1,
+          productPrice: productPrice, // Added productPrice to the cart item
+          totalPrice: productPrice
+        });
+      }
+
+      totalCartPrice = calculateTotalCartPrice();
+
+      updateCartDisplay();
+
+      console.log('Product added to cart. ProductName: ' + productName);
+    });
+  });
+
+  document.getElementById('cartModal').addEventListener('show.bs.modal', function (e) {
+    updateCartDisplay();
+  });
+
+  function updateCartDisplay() {
+    var cartItemsContainer = document.getElementById('cartItems');
+    var fragment = document.createDocumentFragment(); // Create a document fragment
+
+    cartItems.forEach(function (item) {
+      var listItem = document.createElement('li');
+      listItem.className = 'list-group-item';
+      listItem.textContent = item.productName + ' - ₱' + item.totalPrice.toFixed(2) + ' (Quantity: ' + item.quantity + ')';
+
+      // Add increment, decrement, and delete buttons
+      var incrementButton = createButton('+', 'btn-success', function () {
+        incrementItem(item);
+      });
+
+      var decrementButton = createButton('-', 'btn-warning', function () {
+        decrementItem(item);
+      });
+
+      var deleteButton = createButton('Delete', 'btn-danger', function () {
+        deleteItem(item);
+      });
+
+      listItem.appendChild(incrementButton);
+      listItem.appendChild(decrementButton);
+      listItem.appendChild(deleteButton);
+
+      fragment.appendChild(listItem); // Append the item to the fragment
+    });
+
+    // Clear the existing items and append the fragment
+    cartItemsContainer.innerHTML = '';
+    cartItemsContainer.appendChild(fragment);
+
+    // Update the HTML element displaying the total price in the modal
+    document.getElementById('cartTotal').textContent = 'Total: ₱' + totalCartPrice.toFixed(2);
+  }
+
+  function createButton(text, className, clickHandler) {
+    var button = document.createElement('button');
+    button.className = 'btn btn-sm ' + className + ' mx-2';
+    button.textContent = text;
+    button.addEventListener('click', clickHandler);
+    return button;
+  }
+
+  function calculateTotalCartPrice() {
+    return cartItems.reduce((total, item) => total + item.totalPrice, 0);
+  }
+
+  function incrementItem(item) {
+    item.quantity++;
+    item.totalPrice = item.quantity * item.productPrice;
+    totalCartPrice = calculateTotalCartPrice();
+    updateCartDisplay();
+  }
+
+  function decrementItem(item) {
+    if (item.quantity > 1) {
+      item.quantity--;
+      item.totalPrice = item.quantity * item.productPrice;
+    } else {
+      // If quantity is 1, remove the item from the cart
+      var index = cartItems.indexOf(item);
+      cartItems.splice(index, 1);
+    }
+    totalCartPrice = calculateTotalCartPrice();
+    updateCartDisplay();
+  }
+
+  function deleteItem(item) {
+    // Remove the item from the cart and update the total price
+    var index = cartItems.indexOf(item);
+    cartItems.splice(index, 1);
+    totalCartPrice = calculateTotalCartPrice();
+    updateCartDisplay();
+  }
+});
 
 // search function
 $(document).ready(function() {
