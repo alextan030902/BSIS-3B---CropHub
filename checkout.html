@@ -1,52 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Checkout Page</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <style>
+        /* Add your checkout page styles here */
+    </style>
 </head>
 <body>
 
-  <div class="container mt-5">
-  <div class="checkoutContainer">
-    <h2 class="mb-4">Checkout</h2>
+    <header>
+        <h1>Checkout Page</h1>
+    </header>
 
-    <!-- Cart Items -->
-    <div class="row">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-body">
-            <!-- Cart items will be dynamically added here using JavaScript -->
-            <div id="cartItems"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Order Summary -->
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Order Summary</h5>
-            <hr>
-
-            <!-- Display total amount, taxes, etc. -->
-            <p>Total: $<span id="totalAmount">0.00</span></p>
-
-            <!-- Checkout Button -->
-            <button class="btn btn-primary">Proceed to Payment</button>
-          </div>
-        </div>
-      </div>
+    <div class="checkout-container">
+        <h2>Order Summary</h2>
+        <div id="order-summary"></div>
     </div>
 
-  </div>
+    <script>
+        // Extract cart data from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const cartData = urlParams.get('cart');
 
-  <!-- Bootstrap JS and Popper.js (required for Bootstrap JavaScript components) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+        if (cartData) {
+            // Parse the JSON-encoded cart data
+            const cart = JSON.parse(decodeURIComponent(cartData));
 
-  <!-- Your custom JavaScript for handling the cart items -->
-  <script src="assets/js/script.js"></script>
+            // Display the order summary
+            const orderSummary = document.getElementById('order-summary');
+            orderSummary.innerHTML = '<ul>';
+            cart.forEach(item => {
+                orderSummary.innerHTML += `<li>${item.productName} - $${item.price.toFixed(2)}</li>`;
+            });
+            orderSummary.innerHTML += '</ul>';
+        } else {
+            // Handle the case where no cart data is provided (e.g., direct access to checkout page)
+            alert('No items in the cart. Please add items before accessing the checkout page.');
+            // Redirect to the add to cart page
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
 </html>

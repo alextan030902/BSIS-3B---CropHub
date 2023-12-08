@@ -3,66 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart</title>
-    <!-- Add your CSS and other dependencies here -->
+    <title>Add to Cart Page</title>
+    <style>
+        /* Styles from the previous example remain unchanged */
+    </style>
 </head>
 <body>
 
-    <!-- Your product section with "Add to cart" buttons -->
+    <header>
+        <h1>Add to Cart Page</h1>
+    </header>
 
-    <div class="modal fade" id="cartModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
-        aria-labelledby="cartModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title" id="cartModalLabel">Your Cart</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <ul id="cartItems" class="list-group">
-                        <!-- Cart items will be dynamically added here -->
-                    </ul>
-                    <p>Total: ₹<span id="cartTotal">0.00</span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" onclick="checkout()">Checkout</button>
-                </div>
+    <div class="cart-container">
+        <div class="product" id="product1">
+            <img src="product1.jpg" alt="Product 1">
+            <div>
+                <h3>Product 1</h3>
+                <p>Price: $20.00</p>
+                <button onclick="addToCart('Product 1', 20.00)">Add to Cart</button>
             </div>
         </div>
+
+        <div class="product" id="product2">
+            <img src="product2.jpg" alt="Product 2">
+            <div>
+                <h3>Product 2</h3>
+                <p>Price: $25.00</p>
+                <button onclick="addToCart('Product 2', 25.00)">Add to Cart</button>
+            </div>
+        </div>
+
+        <!-- Additional products can be added here -->
+
+        <div id="cart-summary"></div>
+
+        <button class="checkout-btn" onclick="redirectToCheckout()">Checkout</button>
     </div>
 
     <script>
-        function updateTotal(price) {
-            var cartTotalElement = document.getElementById('cartTotal');
-            var currentTotal = parseFloat(cartTotalElement.textContent);
-            var newTotal = (currentTotal + price).toFixed(2);
-            cartTotalElement.textContent = newTotal;
+        let cart = [];
+
+        function addToCart(productName, price) {
+            cart.push({ productName, price });
+            updateCartSummary();
         }
 
-        function addToCart(productName, productPrice) {
-            // Simulating adding an item to the cart
-            var listItem = document.createElement('li');
-            listItem.className = 'list-group-item';
-            listItem.textContent = productName + ' - ₹' + productPrice.toFixed(2);
-            document.getElementById('cartItems').appendChild(listItem);
+        function updateCartSummary() {
+            const cartSummary = document.getElementById('cart-summary');
+            cartSummary.innerHTML = '<h2>Shopping Cart</h2>';
 
-            // Updating the total price in the cart
-            updateTotal(productPrice);
-
-            // Show the cart modal
-            $('#cartModal').modal('show');
+            if (cart.length === 0) {
+                cartSummary.innerHTML += '<p>Your cart is empty.</p>';
+            } else {
+                cartSummary.innerHTML += '<ul>';
+                cart.forEach(item => {
+                    cartSummary.innerHTML += `<li>${item.productName} - $${item.price.toFixed(2)}</li>`;
+                });
+                cartSummary.innerHTML += '</ul>';
+            }
         }
 
-        function checkout() {
-            // Implement your checkout logic here
-            alert('Implement your checkout logic here.');
+        function redirectToCheckout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty. Add items before checking out.');
+            } else {
+                // Encode the cart data as a JSON string and pass it as a URL parameter
+                const cartData = encodeURIComponent(JSON.stringify(cart));
+                // Redirect to the checkout page with cart data
+                window.location.href = `checkout.html?cart=${cartData}`;
+            }
         }
     </script>
-
-    <!-- Add your JavaScript dependencies here -->
-
 </body>
 </html>

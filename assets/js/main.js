@@ -17,7 +17,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();  // Use getDatabase to get a reference to the database
-
+const auth = getAuth();
 
 
 
