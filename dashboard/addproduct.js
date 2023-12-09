@@ -37,15 +37,15 @@ addProduct.addEventListener('click', function() {
     const productsRef = ref(db, "products");
     const newProductsRef = push(productsRef);
     set(newProductsRef, products)
-    .then(() => {
-    console.log("User successfully registered");
-    
-    })
-    .catch((error) => {
-    console.error(
-        "Error creating user in Firebase Realtime Database:",
-        error
-    );
+        .then(() => {
+        console.log("User successfully registered");
+        
+        })
+        .catch((error) => {
+        console.error(
+            "Error creating user in Firebase Realtime Database:",
+            error
+        );
     
     })
         

@@ -55,7 +55,7 @@ function displayAllProducts() {
       const cardElement = document.createElement('div');
       cardElement.classList.add('card');
 
-    //   Create and populate HTML elements
+    //Create and populate HTML elements
       cardElement.classList.add('col');
       cardElement.classList.add('card');
 
