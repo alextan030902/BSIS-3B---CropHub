@@ -129,7 +129,8 @@ function displayAllProducts() {
 
     addToCart.addEventListener('click', function (event) {
   if (event.target && event.target.id === 'addToCart') {
-    const userId = '-Nl3qCS0CvHo0-VMXl_6';
+    // const userId = '-Nl3qCS0CvHo0-VMXl_6';
+    const userId = getUserData();
     const productID = event.target.parentElement.parentElement.dataset.productid;
 
     const cart = {
@@ -248,7 +249,27 @@ function getProductData(productId, callback) {
   });
 }
 
+function getUserData(userId) {
+  const userRef = ref(db, "users");
+  const localUser = JSON.parse(localStorage.getItem('currentUser'));
+
+  onValue(userRef, (snapshot) => {
+    snapshot.forEach((product) => {
+      const userData = product.val();
+      const userID = product.key;
+
+      if (userId === userID) {
+        const name = userData.key;
+        return name;
+      }
+    });
+  });
+}
+
 window.addEventListener('load', viewCarts);
+
+
+
 
 function closeModal() {
   // Close the Bootstrap modal using jQuery

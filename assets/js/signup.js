@@ -18,6 +18,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+
 const signupForm = document.getElementById("signupForm");
 signupForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -133,6 +135,8 @@ signupForm.addEventListener("submit", (event) => {
     });
 });
 
+
+
 function checkEmailExistence(email) {
   const db = getDatabase();
   const usersRef = ref(db, "users");
@@ -156,56 +160,3 @@ function checkEmailExistence(email) {
 }
 checkEmailExistence(email);
 
-document.addEventListener("DOMContentLoaded", function () {
-  const loginForm = document.getElementById("loginForm");
-
-  loginForm.addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent the default form submission
-
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("loginPassword").value;
-
-    const db = getDatabase();
-    const usersRef = ref(db, "users");
-
-    let userID = "";
-    let userFound = false;
-
-    onValue(usersRef, (snapshot) => {
-      snapshot.forEach((userSnapshot) => {
-        const userData = userSnapshot.val();
-        const uid = userSnapshot.key;
-        const emailAddress = userData.email;
-        const passwordData = userData.password;
-
-        // console.log(emailAddress, passwordData);
-
-        if (emailAddress === email && passwordData === password) {
-          userFound = true;
-          userID = uid;
-          console.log("User successfully signed in:", userID);
-
-          localStorage.setItem("userEmail", emailAddress);
-
-          const toast = new bootstrap.Toast(
-            document.getElementById("signinSuccessToast")
-          );
-          toast.show();
-
-          setTimeout(() => {
-            toast.hide();
-            window.location.href = "index.html";
-          }, 1000);
-
-          return; // Exit the loop if a user is found
-        }
-      });
-
-      if (!userFound) {
-        // Handle case where user is not found or credentials are incorrect
-        console.log("Invalid credentials");
-        // Display an error message or handle it accordingly
-      }
-    });
-  });
-});
