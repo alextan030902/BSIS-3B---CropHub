@@ -123,37 +123,50 @@ function displayAllProducts() {
   window.addEventListener('load', displayAllProducts);
 
 
-      const addToCart=document.getElementById('products-container');
-      addToCart.addEventListener('click', function (event) {
-        if (event.target && event.target.id === 'addToCart') {
-            // Handle the "Add to Cart" button click
-            const userId = '-Nl3qCS0CvHo0-VMXl_6';
-            const productID =event.target.parentElement.parentElement.dataset.productid;
+  const addToCart = document.getElementById('products-container');
+  const cartBadge = document.getElementById('cart-count-badge');
+    let cartCount = 0;
 
-    
+    addToCart.addEventListener('click', function (event) {
+  if (event.target && event.target.id === 'addToCart') {
+    const userId = '-Nl3qCS0CvHo0-VMXl_6';
+    const productID = event.target.parentElement.parentElement.dataset.productid;
 
-      const cart = {
-          userId: userId,
-          productId: productID,
-      }
+    const cart = {
+      userId: userId,
+      productId: productID,
+    }
 
-      const cartsRef = ref(db, "carts");
-      const newCartsRef = push(cartsRef);
-      set(newCartsRef, cart)
-          .then(() => {
-              console.log("Product added successfully ");
-          })
-          .catch((error) => {
-              console.error(
-                  "Error creating product in Firebase Realtime Database:",
-                  error
-              );
-          })
+    const cartsRef = ref(db, 'carts');
+    const newCartsRef = push(cartsRef);
+
+    set(newCartsRef, cart)
+      .then(() => {
+        console.log('Product added successfully');
+
+        // Increment the cart count
+        cartCount++;
+
+        // Update the cart badge with the new count
+        updateCartBadge(cartCount);
+      })
+      .catch((error) => {
+        console.error('Error creating product in Firebase Realtime Database:', error);
+      });
   }
 });
 
+// Function to update the cart badge with the current cart count
+function updateCartBadge(count) {
+  if (cartBadge) {
+    cartBadge.textContent = count;
+  }
+}
+
+
 function viewCarts() {
   const productsContainer = document.getElementById('cart-container');
+  let totalCartPrice = 0; // Initialize the total price
 
   if (!productsContainer) {
     console.error("Products container not found");
@@ -172,20 +185,52 @@ function viewCarts() {
       const userId = cartData.userId;
 
       getProductData(productId, (productData) => {
+        const productPrice = parseFloat(productData.price); // Assuming price is stored as a string
+
         // Create HTML elements and populate them with product data
         const productContainer = document.createElement('div');
         productContainer.innerHTML = `
           <p>User ID: ${userId}</p>
           <p>Product Name: ${productData.name}</p>
           <p>Product Price: ${productData.price}</p>
+          <p>Quantity: <input type="number" min="1" value="${cartData.quantity || 1}" id="quantity_${productId}"></p>
           <p>Product Image: ${productData.image}</p>
-          
+          <button class="btn btn-danger" id="closeModalButton" data-product-id="${productId}">Delete</button>
           <hr>
         `;
         productsContainer.appendChild(productContainer);
+
+        // Update the totalCartPrice
+        totalCartPrice += productPrice * (cartData.quantity || 1);
+
+        // Display the total price
+        displayTotalPrice(totalCartPrice);
+
+        // Add event listener for quantity change
+        const quantityInput = document.getElementById(`quantity_${productId}`);
+        if (quantityInput) {
+          quantityInput.addEventListener('input', function () {
+            const newQuantity = parseInt(quantityInput.value, 10) || 1;
+            const oldQuantity = cartData.quantity || 1;
+            cartData.quantity = newQuantity;
+
+            // Update the totalCartPrice when the quantity changes
+            totalCartPrice += productPrice * (newQuantity - oldQuantity);
+            displayTotalPrice(totalCartPrice);
+          });
+        }
       });
     });
   });
+}
+
+function displayTotalPrice(totalPrice) {
+  // Assuming you have an element to display the total price
+  const totalContainer = document.getElementById('total-container');
+
+  if (totalContainer) {
+    totalContainer.textContent = `Total Price: ${totalPrice.toFixed(2)}`;
+  }
 }
 
 function getProductData(productId, callback) {
@@ -204,3 +249,52 @@ function getProductData(productId, callback) {
 }
 
 window.addEventListener('load', viewCarts);
+
+function closeModal() {
+  // Close the Bootstrap modal using jQuery
+  $('#myModal').modal('hide');
+}
+
+// Get the close button element
+var closeButton = document.getElementById('closeModalButton');
+
+// Attach the click event listener to the button
+closeButton.addEventListener('click', closeModal);
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Add a submit event listener to the form
+  const messageForm = document.getElementById('messageForm');
+
+  messageForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent the form from submitting and page refresh
+
+    // Get values from the form
+    const email = document.getElementById('email').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+
+    // Validate form data (you can add more validation as needed)
+
+    // Create a message object
+    const newMessage = {
+      email: email,
+      subject: subject,
+      message: message
+    };
+
+    // Get a reference to the "messages" collection in the database
+    const messagesRef = ref(db, "messages");
+
+    // Push a new message to the database
+    push(messagesRef, newMessage)
+      .then(() => {
+        console.log("Message successfully sent!");
+        // You can redirect the user to a confirmation page or perform other actions here
+      })
+      .catch((error) => {
+        console.error("Error creating message in Firebase Realtime Database:", error);
+      });
+  });
+});

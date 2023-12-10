@@ -32,7 +32,7 @@
               </a>
             </li>
             <li>
-              <a href="#products" class="nav-link text-white">
+              <a href="#products-container" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#grid"></use></svg>
                 Products
               </a>
@@ -56,18 +56,15 @@
        </form>
 
      <div class="text-end">
-       <!-- Your HTML content -->
-       <button type="button" class="btn btn-outline-warning" id="wishlistButton">
-         <i class="bi bi-heart"></i> 
-       </button>
-       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
         <i class="bi bi-cart-fill"></i>
+        <span id="cart-count-badge" class="badge bg-secondary">0</span>
       </button>
       
-      <button type="button" class="btn btn-primary" id="loginButton">Login</button>
+      <a href="login.html">
+        <button type="button" class="btn btn-primary" id="loginButton">Login</button>
+      </a>
 
-     
-   
       <div class="modal" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -75,7 +72,6 @@
                 <!-- Modal Header -->
                 <div class="modal-header">
                     <h4 class="modal-title">Cart</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
     
                 <!-- Modal Body -->
@@ -84,11 +80,19 @@
                         <!-- Your content goes here -->
                     </div>
                 </div>
+
+                <div id="total-container" class="container mt-4">
+                  <p class="h6">Total:</p>
+                </div>
     
                 <!-- Modal Footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+                  <a href="checkout.html">
+                    <button type="button" class="btn btn-warning" id="checkoutButton">Checkout</button>
+                  </a>
+                  
+                  <button type="button" class="btn btn-danger" id="closeModalButton">Close</button>
+              </div>
     
             </div>
         </div>
@@ -162,24 +166,63 @@
 
 
 <!-- Body End Section -->
-<!-- Footer Section -->
-      <div class="container">
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-          <p class="col-md-4 mb-0 text-body-secondary">© 2023 Company, Inc</p>
-      
-          <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-          </a>
-      
-          <ul class="nav col-md-4 justify-content-end">
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
-          </ul>
-        </footer>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="contact1-pic js-tilt" data-tilt="" style="will-change: transform; transform: perspective(300px) rotateX(0deg) rotateY(0deg);">
+        <img src="img/img-01.png" alt="IMG">
       </div>
+    </div>
+    <div class="col-md-6">
+      <form class="contact1-form validate-form" id="messageForm">
+        <h2 class="contact1-form-title">Send us a message</h2>
+
+        <div class="form-group validate-input" data-validate="Valid email is required: ex@abc.xyz">
+          <input class="form-control input1" type="email" id="email" name="email" placeholder="Email">
+          <span class="shadow-input1"></span>
+        </div>
+
+        <div class="form-group validate-input" data-validate="Subject is required">
+          <input class="form-control input1" type="text" id="subject" name="subject" placeholder="Subject">
+          <span class="shadow-input1"></span>
+        </div>
+
+        <div class="form-group validate-input" data-validate="Message is required">
+          <textarea class="form-control input1" id="message" name="message" placeholder="Message"></textarea>
+          <span class="shadow-input1"></span>
+        </div>
+
+        <div class="container-contact1-form-btn">
+          <button class="btn btn-primary contact1-form-btn" id="sendEmail">
+            <span>Send Email <i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Footer Section -->
+<div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <p class="col-md-4 mb-0 text-body-secondary">© 2023 Company, Inc</p>
+
+    <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+    </a>
+
+    <ul class="nav col-md-4 justify-content-end">
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+    </ul>
+  </footer>
+</div>
       
 <!-- Footer End Section -->
 
@@ -188,8 +231,9 @@
 
 <script type="module" src="assets/js/script.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <!-- Script End Section -->
