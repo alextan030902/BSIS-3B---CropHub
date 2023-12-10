@@ -110,7 +110,7 @@ signupForm.addEventListener("submit", (event) => {
     lastname: lastname,
     email: email,
     password: password,
-    uid: userId,
+    userId: userId,
   };
 
   let registrationSuccess = true;
@@ -146,7 +146,7 @@ function checkEmailExistence(email) {
   onValue(usersRef, (snapshot) => {
     snapshot.forEach((userSnapshot) => {
       const userData = userSnapshot.val();
-      const uid = userSnapshot.key;
+      const userId = userSnapshot.key;
       const emailAddress = userData.email;
 
       if (emailAddress === email) {

@@ -127,35 +127,42 @@ function displayAllProducts() {
   const cartBadge = document.getElementById('cart-count-badge');
     let cartCount = 0;
 
-    addToCart.addEventListener('click', function (event) {
-  if (event.target && event.target.id === 'addToCart') {
-    // const userId = '-Nl3qCS0CvHo0-VMXl_6';
-    const userId = getUserData();
-    const productID = event.target.parentElement.parentElement.dataset.productid;
-
-    const cart = {
-      userId: userId,
-      productId: productID,
-    }
-
-    const cartsRef = ref(db, 'carts');
-    const newCartsRef = push(cartsRef);
-
-    set(newCartsRef, cart)
-      .then(() => {
-        console.log('Product added successfully');
-
-        // Increment the cart count
-        cartCount++;
-
-        // Update the cart badge with the new count
-        updateCartBadge(cartCount);
-      })
-      .catch((error) => {
-        console.error('Error creating product in Firebase Realtime Database:', error);
-      });
-  }
-});
+    addToCart.addEventListener('click', async function (event) {
+      if (event.target && event.target.id === 'addToCart') {
+        try {
+          // Retrieve user data asynchronously
+          const userData = await getUserData();
+          const userId = userData.userId;
+    
+          // Retrieve product ID
+          const productID = event.target.parentElement.parentElement.dataset.productid;
+    
+          // Create cart object
+          const cart = {
+            userId: userId,
+            productId: productID,
+          };
+    
+          // Get references
+          const cartsRef = ref(db, 'carts');
+          const newCartsRef = push(cartsRef);
+    
+          // Set data in the new reference
+          await set(newCartsRef, cart);
+    
+          // Increment the cart count
+          cartCount++;
+    
+          // Update the cart badge with the new count
+          updateCartBadge(cartCount);
+    
+          console.log('Product added successfully');
+        } catch (error) {
+          console.error('Error adding product to the cart:', error);
+        }
+      }
+    });
+    
 
 // Function to update the cart badge with the current cart count
 function updateCartBadge(count) {
@@ -249,22 +256,49 @@ function getProductData(productId, callback) {
   });
 }
 
-function getUserData(userId) {
-  const userRef = ref(db, "users");
-  const localUser = JSON.parse(localStorage.getItem('currentUser'));
+function getUserData() {
+  return new Promise((resolve, reject) => {
+    const userRef = ref(db, "users");
+    const userId = localStorage.getItem('userId');
 
-  onValue(userRef, (snapshot) => {
-    snapshot.forEach((product) => {
-      const userData = product.val();
-      const userID = product.key;
+    if (!userId) {
+      reject("User ID not found in localStorage");
+      return;
+    }
 
-      if (userId === userID) {
-        const name = userData.key;
-        return name;
+    onValue(userRef, (snapshot) => {
+      let found = false;
+
+      snapshot.forEach((product) => {
+        const userData = product.val();
+        const userID = product.key;
+
+        if (userId === userID) {
+          const name = userData.key;
+          found = true;
+          resolve({ userId, name });
+        }
+      });
+
+      if (!found) {
+        reject("User not found in the database");
       }
+    }, (error) => {
+      reject(error);
     });
   });
 }
+
+// Example of using the function
+getUserData()
+  .then(({ userId, name }) => {
+    console.log("User ID:", userId);
+  
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
+
 
 window.addEventListener('load', viewCarts);
 

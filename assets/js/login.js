@@ -38,7 +38,7 @@ loginForm.addEventListener("submit", (event)=> {
   onValue(usersRef, (snapshot) => {
     snapshot.forEach((userSnapshot) => {
       const userData = userSnapshot.val();
-      const uid = userSnapshot.key;
+      const userId = userSnapshot.key;
       const emailAddress = userData.email;
       const passwordData = userData.password;
 
@@ -46,10 +46,10 @@ loginForm.addEventListener("submit", (event)=> {
 
       if (emailAddress === email && passwordData === password) {
         userFound = true;
-        userID = uid;
+        userID = userId;
         console.log("User successfully signed in:", userID);
 
-        localStorage.setItem("uid", uid);
+        localStorage.setItem("userId", userId);
         localStorage.setItem("userEmail", emailAddress);
 
         const toast = new bootstrap.Toast(
