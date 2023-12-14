@@ -51,6 +51,8 @@ loginForm.addEventListener("submit", (event)=> {
 
         localStorage.setItem("userId", userId);
         localStorage.setItem("userEmail", emailAddress);
+        localStorage.setItem("userFirstname", userData.firstname);
+        localStorage.setItem("userLastname", userData.lastname);
 
         const toast = new bootstrap.Toast(
           document.getElementById("signinSuccessToast")

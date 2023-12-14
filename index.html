@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.6.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel ="stylesheet" href="index.css" >
+    <link rel ="stylesheet" href="assets/dist/css/index.css" >
     
 </head>
 <!-- Header Section -->
@@ -44,6 +44,7 @@
                 Features
               </a>
             </li>
+            <span id="fullName">Log in as: </span>
           </ul>
         </div>
       </div>
@@ -59,12 +60,13 @@
      <div class="text-end">
       <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
         <i class="bi bi-cart-fill"></i>
-        <span id="cart-count-badge" class="badge bg-secondary">0</span>
+        <span id="cart-badge" class="badge bg-warning">0</span>
       </button>
       
       <a href="login.html">
         <button type="button" class="btn btn-primary" id="loginButton">Login</button>
       </a>
+        <button type="button" class="btn btn-warning" id="logoutButton">Logout</button>
 
       <div class="modal" id="myModal">
         <div class="modal-dialog">
@@ -82,9 +84,8 @@
                     </div>
                 </div>
 
-                <div id="total-container" class="container mt-4">
-                  <p class="h6">Total:</p>
-                </div>
+                
+                <div id="total-container"class="container mt-4">Total Price: 0.00</div>
     
                 <!-- Modal Footer -->
                 <div class="modal-footer">

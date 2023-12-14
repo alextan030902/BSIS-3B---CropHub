@@ -13,11 +13,11 @@ body {
     color: #070000; 
 }
 
-header {
+/* header {
     background: linear-gradient(to bottom, #141414, #ffffff);
     color: white;
     padding: 10px 0;
-}
+} */
 
 nav {
     display: flex;

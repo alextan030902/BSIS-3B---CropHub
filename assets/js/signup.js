@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, push } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -103,19 +103,20 @@ signupForm.addEventListener("submit", (event) => {
 
   const db = getDatabase();
 
-  const userId = Math.random().toString(36).substr(2, 9);
-
   const user = {
     firstname: firstname,
     lastname: lastname,
     email: email,
     password: password,
-    userId: userId,
+   
   };
 
   let registrationSuccess = true;
 
-  set(ref(db, "users/" + userId), user)
+  const usersRef = ref(db, "users");
+  const newUsersRef = push(usersRef);
+
+  set(newUsersRef, user ) 
     .then(() => {
       console.log("User successfully registered");
 

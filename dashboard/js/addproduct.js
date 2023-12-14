@@ -25,12 +25,14 @@ addProduct.addEventListener('click', function() {
 
     const name = document.getElementById('name').value;
     const price = document.getElementById('price').value;
+    const deSC = document.getElementById('deSC').value
     const image = document.getElementById('image').value;
 
-    console.log (name,price,image);
+    console.log (name,price,deSC,image);
     const products = {
         name: name,
         price: price,
+        deSC: deSC,
         image: image
     }
 

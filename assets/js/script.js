@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import { getDatabase, ref, set, push, onValue, remove} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
 
 // Your web app's Firebase configuration
@@ -177,7 +177,7 @@ function viewCarts() {
   let totalCartPrice = 0; // Initialize the total price
 
   if (!productsContainer) {
-    console.error("Products container not found");
+    console.error("Cart container not found");
     return;
   }
 
@@ -197,19 +197,20 @@ function viewCarts() {
 
         // Create HTML elements and populate them with product data
         const productContainer = document.createElement('div');
+        productContainer.setAttribute('data-cartId', cart.key);
         productContainer.innerHTML = `
           <p>User ID: ${userId}</p>
           <p>Product Name: ${productData.name}</p>
           <p>Product Price: ${productData.price}</p>
-          <p>Quantity: <input type="number" min="1" value="${cartData.quantity || 1}" id="quantity_${productId}"></p>
+          <p>Quantity: <input type="number" min="1" value="${cartData.quantity || 0}" id="quantity_${productId}"></p>
           <p>Product Image: ${productData.image}</p>
-          <button class="btn btn-danger" id="closeModalButton" data-product-id="${productId}">Delete</button>
+          <button class="btn btn-danger" id="deleteButton" data-cartId="${cart.key}">Delete</button>
           <hr>
         `;
         productsContainer.appendChild(productContainer);
 
         // Update the totalCartPrice
-        totalCartPrice += productPrice * (cartData.quantity || 1);
+        totalCartPrice += productPrice * (cartData.quantity || 0);
 
         // Display the total price
         displayTotalPrice(totalCartPrice);
@@ -292,7 +293,8 @@ function getUserData() {
 // Example of using the function
 getUserData()
   .then(({ userId, name }) => {
-    console.log("User ID:", userId);
+    console.log("ID is sucessfully retrieved User ID:", userId);
+    
   
   })
   .catch((error) => {
@@ -353,3 +355,41 @@ document.addEventListener('DOMContentLoaded', function () {
       });
   });
 });
+
+
+const fullName = localStorage.getItem("userFirstname") + " " + localStorage.getItem("userLastname");
+
+document.getElementById("fullName").textContent = fullName;
+
+const logoutButton = document.getElementById("logoutButton");
+
+logoutButton.addEventListener("click", function () {
+  localStorage.clear();
+  window.location.href = "login.html";
+
+});
+
+document.addEventListener('click', function(event) {
+  const target = event.target.closest('#deleteButton');
+  if (target) {
+    const cartid = target.dataset.cartid;
+    // Handle click on delete button
+    console.log(`Delete button clicked for cart item with ID: ${cartid}`);
+
+    const db = getDatabase();
+    const cartsRef = ref(db, `carts/${cartid}`)
+
+    remove(cartsRef)
+      .then(() => {
+        console.log("Item deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Error deleting item from Firebase Realtime Database:", error);
+      });
+
+  }
+});
+
+const email = localStorage.getItem("userEmail");
+document.getElementById("email").value = email;
+

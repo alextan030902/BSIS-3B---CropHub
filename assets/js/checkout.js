@@ -14,8 +14,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase();
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase();
 
 document.addEventListener('DOMContentLoaded', function () {
     // Add a click event listener to the Submit button
@@ -55,3 +55,31 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 });
+
+        const firstName = localStorage.getItem("userFirstname");
+        const lastName = localStorage.getItem("userLastname");
+        const email = localStorage.getItem("userEmail");
+        
+        document.getElementById("fullName").value = firstName + lastName; 
+        document.getElementById("email").value = email;
+
+        // const ordrersRef = ref(db, `orders/${orderId}`);
+        // update(ordrersRef, orders)
+        //     .then(() => {
+        //     console.log("Item updated successfully");
+        //     updateItemForm.reset();
+        //     })
+        //     .catch((error) => {
+        //     console.error(
+        //         "Error updating item in Firebase Realtime Database:",
+        //         error
+        //     );
+        //     updateSuccess = false;
+        //     })
+        //     .finally(() => {
+        //     if (updateSuccess) {
+        //         window.location.href = "/baylo/products.html";
+        //     }
+        //     });
+
+        
