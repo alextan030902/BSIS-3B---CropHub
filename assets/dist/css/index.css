@@ -4,7 +4,7 @@ body, h1, h2, h3, p, ul, li {
     padding: 0;
 }
 .p-5.mb-4.bg-light.rounded-3 {
-    background: url('img/bg.jpg') center center/cover no-repeat;
+    background: url('/img/bg.jpg') center center/cover no-repeat;
     color: #000000; 
 }
 body {

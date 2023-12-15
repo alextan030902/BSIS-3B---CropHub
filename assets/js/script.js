@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, set, push, onValue, remove} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
-
+import { getDatabase, ref, set, push, onValue, remove, get, update} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import {getStorage, ref as storageRef, uploadBytes, getDownloadURL,} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -86,7 +86,14 @@ function displayAllProducts() {
       cardText.setAttribute('id', 'productPrice');
       cardText.textContent = `(Price: $${productPrice})`;
 
+      const cardQty = document.createElement('p'); // Create a paragraph element
+      const inputElement = document.createElement('input'); // Create an input element
+      cardQty.appendChild(inputElement);
+      inputElement.type = 'number'; // Set the input type correctly
+      inputElement.classList.add('card-text'); // Add the desired class
+      inputElement.setAttribute('id', 'productQty'); // Set the ID attribute
 
+      
       const addToCartButton = document.createElement('button');
       addToCartButton.classList.add('btn', 'btn-primary', 'me-2');
       addToCartButton.setAttribute('id', 'addToCart');
@@ -97,7 +104,9 @@ function displayAllProducts() {
       // Append elements to the card
       cardBody.appendChild(cardTitle);
       cardBody.appendChild(cardText);
+      cardBody.appendChild(cardQty);
       cardBody.appendChild(addToCartButton);
+      
 
       
       
@@ -123,125 +132,199 @@ function displayAllProducts() {
   window.addEventListener('load', displayAllProducts);
 
 
-  const addToCart = document.getElementById('products-container');
-  const cartBadge = document.getElementById('cart-count-badge');
-    let cartCount = 0;
+  const addToCart = document.getElementById('products-container'); // assuming element ID
 
-    addToCart.addEventListener('click', async function (event) {
-      if (event.target && event.target.id === 'addToCart') {
-        try {
-          // Retrieve user data asynchronously
-          const userData = await getUserData();
-          const userId = userData.userId;
-    
-          // Retrieve product ID
-          const productID = event.target.parentElement.parentElement.dataset.productid;
-    
-          // Create cart object
-          const cart = {
-            userId: userId,
-            productId: productID,
-          };
-    
-          // Get references
-          const cartsRef = ref(db, 'carts');
-          const newCartsRef = push(cartsRef);
-    
-          // Set data in the new reference
-          await set(newCartsRef, cart);
-    
-          // Increment the cart count
-          cartCount++;
-    
-          // Update the cart badge with the new count
-          updateCartBadge(cartCount);
-    
-          console.log('Product added successfully');
-        } catch (error) {
-          console.error('Error adding product to the cart:', error);
+  addToCart.addEventListener("click", async function (event) {
+    if (event.target && event.target.id === 'addToCart') {
+      try {
+        // Retrieve user data asynchronously
+        const userData = await getUserData();
+        const userId = userData.userId;
+        const quantityInput = document.getElementById("productQty");
+        const quantity = quantityInput.value;
+  
+        // Check if quantity is a valid number
+        if (isNaN(quantity) || quantity.trim() === "") {
+          console.error("Invalid quantity input:", quantity);
+          return;
         }
-      }
-    });
-    
-
-// Function to update the cart badge with the current cart count
-function updateCartBadge(count) {
-  if (cartBadge) {
-    cartBadge.textContent = count;
-  }
-}
-
-
-function viewCarts() {
-  const productsContainer = document.getElementById('cart-container');
-  let totalCartPrice = 0; // Initialize the total price
-
-  if (!productsContainer) {
-    console.error("Cart container not found");
-    return;
-  }
-
-  const cartsRef = ref(db, "carts");
-
-  onValue(cartsRef, (snapshot) => {
-    productsContainer.innerHTML = ""; // Clear the container
-
-    snapshot.forEach((cart) => {
-      const cartData = cart.val();
-      const cartId = cart.key;
-      const productId = cartData.productId;
-      const userId = cartData.userId;
-
-      getProductData(productId, (productData) => {
-        const productPrice = parseFloat(productData.price); // Assuming price is stored as a string
-
-        // Create HTML elements and populate them with product data
-        const productContainer = document.createElement('div');
-        productContainer.setAttribute('data-cartId', cart.key);
-        productContainer.innerHTML = `
-          <p>User ID: ${userId}</p>
-          <p>Product Name: ${productData.name}</p>
-          <p>Product Price: ${productData.price}</p>
-          <p>Quantity: <input type="number" min="1" value="${cartData.quantity || 0}" id="quantity_${productId}"></p>
-          <p>Product Image: ${productData.image}</p>
-          <button class="btn btn-danger" id="deleteButton" data-cartId="${cart.key}">Delete</button>
-          <hr>
-        `;
-        productsContainer.appendChild(productContainer);
-
-        // Update the totalCartPrice
-        totalCartPrice += productPrice * (cartData.quantity || 0);
-
-        // Display the total price
-        displayTotalPrice(totalCartPrice);
-
-        // Add event listener for quantity change
-        const quantityInput = document.getElementById(`quantity_${productId}`);
-        if (quantityInput) {
-          quantityInput.addEventListener('input', function () {
-            const newQuantity = parseInt(quantityInput.value, 10) || 1;
-            const oldQuantity = cartData.quantity || 1;
-            cartData.quantity = newQuantity;
-
-            // Update the totalCartPrice when the quantity changes
-            totalCartPrice += productPrice * (newQuantity - oldQuantity);
-            displayTotalPrice(totalCartPrice);
+  
+        const parsedQuantity = parseInt(quantity);
+  
+        if (isNaN(parsedQuantity)) {
+          console.error("Failed to parse quantity as a number:", quantity);
+          return;
+        }
+  
+        const productID = event.target.parentElement.parentElement.dataset.productid;
+  
+        const cartsRef = ref(db, "carts");
+  
+        let executedOnce = false;
+  
+        // Retrieve data only once
+        get(cartsRef)
+          .then((snapshot) => {
+            if (!executedOnce) {
+              let productExists = false;
+  
+              snapshot.forEach((userSnapshot) => {
+                const cartData = userSnapshot.val();
+                const cartKey = userSnapshot.key;
+                const productId = cartData.productId;
+                const qty = cartData.quantity;
+  
+                if (productId === productID) {
+                  productExists = true;
+  
+                  const updateCartRef = ref(db, `carts/${cartKey}`);
+  
+                  // Check if qty is defined and is a valid number
+                  const currentQuantity = (typeof qty !== 'undefined' && !isNaN(qty)) ? parseInt(qty) : 0;
+  
+                  const updatedQuantity = currentQuantity + parsedQuantity;
+  
+                  // Check if the updated quantity is a valid number
+                  if (isNaN(updatedQuantity)) {
+                    console.error("Invalid updated quantity:", updatedQuantity);
+                    return;
+                  }
+  
+                  update(updateCartRef, { quantity: updatedQuantity })
+                    .then(() => {
+                      console.log("Item updated successfully");
+                    })
+                    .catch((error) => {
+                      console.error(
+                        "Error updating item in Firebase Realtime Database:",
+                        error
+                      );
+                    });
+                }
+              });
+  
+              if (!productExists) {
+                console.log("Adding new item to the cart");
+                const newCartRef = push(cartsRef);
+                const cart = {
+                  userId: userId,
+                  productId: productID,
+                  quantity: parsedQuantity
+                };
+  
+                // Set data in the new reference
+                set(newCartRef, cart)
+                  .then(() => {
+                    console.log("Item added successfully");
+                  })
+                  .catch((error) => {
+                    console.error(
+                      "Error adding item to Firebase Realtime Database:",
+                      error
+                    );
+                  });
+              }
+  
+              executedOnce = true;
+            }
+          })
+          .catch((error) => {
+            console.error("Error retrieving data from Firebase:", error);
           });
-        }
-      });
-    });
+  
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
   });
-}
 
-function displayTotalPrice(totalPrice) {
-  // Assuming you have an element to display the total price
-  const totalContainer = document.getElementById('total-container');
+  getCount(); 
+  
 
-  if (totalContainer) {
-    totalContainer.textContent = `Total Price: ${totalPrice.toFixed(2)}`;
+  let total = 0; // Declare total as a global variable
+
+  function viewCarts() {
+    const productsContainer = document.getElementById('cart-container');
+  
+    if (!productsContainer) {
+      console.error("Cart container not found");
+      return;
+    }
+  
+    const cartsRef = ref(db, "carts");
+  
+    // Reset total before processing the cart
+    total = 0;
+  
+    onValue(cartsRef, (snapshot) => {
+      productsContainer.innerHTML = ""; // Clear the container
+  
+      snapshot.forEach((cart) => {
+        const cartData = cart.val();
+        const cartId = cart.key;
+        const productId = cartData.productId;
+        const userId = cartData.userId;
+  
+        getProductData(productId, (productData, quantity) => {
+          const productPrice = parseFloat(productData.price);
+          const itemTotal = productPrice * quantity;
+  
+          total += itemTotal;
+  
+          // Create HTML elements and populate them with product data
+          const productContainer = document.createElement('div');
+          productContainer.setAttribute('data-cartId', cartId);
+          productContainer.innerHTML = `
+            <p>User ID: ${userId}</p>
+            <p>Product Name: ${productData.name}</p>
+            <p>Product Price: ${productData.price}</p>
+            <p>Product Image: ${productData.image}</p>
+            <p>Quantity: <input type='number' name= 'quantity' id='quantity'value='${cartData.quantity}'></p>
+            <button class="btn btn-danger deleteButton" data-cartId="${cartId}">Delete</button>
+            <hr>
+          `;
+          productsContainer.appendChild(productContainer);
+  
+          document.getElementById('quantity').value = cartData.quantity;
+  
+          // Add event listener for delete button
+          const deleteButton = productContainer.querySelector('.deleteButton');
+          if (deleteButton) {
+            deleteButton.addEventListener('click', async function () {
+              await remove(ref(db, `carts/${cartId}`));
+              getCount(); // Call getCount after removing an item from the cart
+              updateTotal(); // Update the total after removing an item
+            });
+          }
+        });
+      });
+  
+      updateTotal(); // Update the total after processing the entire cart
+    });
   }
-}
+  
+  function updateTotal() {
+    // Display or use the total wherever needed
+    console.log(`Total Price: ${total}`);
+    // Update your HTML element with the total
+    document.getElementById('total-price').textContent = total.toFixed(2);
+  }
+  
+  // Call getCount when the page loads to initialize the cart count
+  getCount();
+  
 
+  function getCount() {
+    const cartsRef = ref(db, "carts");
+  
+    onValue(cartsRef, (snapshot) => {
+      const count = snapshot.val() ? Object.keys(snapshot.val()).length : 0;
+      console.log(`Number of carts: ${count}`);
+      document.getElementById('cart-badge').textContent = count;
+    });
+  }
+  
+  
 function getProductData(productId, callback) {
   const productRef = ref(db, "products");
 
@@ -256,6 +339,7 @@ function getProductData(productId, callback) {
     });
   });
 }
+
 
 function getUserData() {
   return new Promise((resolve, reject) => {
@@ -393,3 +477,15 @@ document.addEventListener('click', function(event) {
 const email = localStorage.getItem("userEmail");
 document.getElementById("email").value = email;
 
+
+
+
+
+// const itemImage = document.getElementById("itemImage").files[0];
+// const storage = getStorage();
+// const storageBucketRef = storageRef(storage, "item_images");
+// const imageFileName = ${Date.now()}_${itemImage.name};
+// const imageRef = storageRef(storageBucketRef, imageFileName);
+// await uploadBytes(imageRef, itemImage);
+// // Get the download URL of the uploaded image
+// const imageUrl = await getDownloadURL(imageRef);

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import { getDatabase, ref, set, push, onValue} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.getElementById('email').value;
         const paymentMethod = document.getElementById('paymentMethod').value;
 
+
         // Validate form data (you can add more validation as needed)
 
         // Create an orders object
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
             address: address,
             email: email,
             paymentMethod: paymentMethod
+            
         };
 
         // Get a reference to the "orders" collection in the database
@@ -82,4 +84,67 @@ document.addEventListener('DOMContentLoaded', function () {
         //     }
         //     });
 
+        function viewCarts() {
+            const productsContainer = document.getElementById('cart-container');
+            let totalCartPrice = 0; // Initialize the total price
+          
+            if (!productsContainer) {
+              console.error("Cart container not found");
+              return;
+            }
+          
+            const cartsRef = ref(db, "carts");
+          
+            onValue(cartsRef, (snapshot) => {
+              productsContainer.innerHTML = ""; // Clear the container
+          
+              snapshot.forEach((cart) => {
+                const cartData = cart.val();
+                const cartId = cart.key;
+                const productId = cartData.productId;
+                const userId = cartData.userId;
+          
+                getProductData(productId, (productData) => {
+                  const productPrice = parseFloat(productData.price); // Assuming price is stored as a string
+          
+                  // Create HTML elements and populate them with product data
+                  const productContainer = document.createElement('div');
+                  productContainer.setAttribute('data-cartId', cartId);
+                  productContainer.innerHTML = `
+                    <p>Product Name: ${productData.name}</p>
+                    <p>Product Price: ${productData.price}</p>
+                    <p>Product Image: ${productData.image}</p>
+                    <button class="btn btn-danger deleteButton" data-cartId="${cartId}">Delete</button>
+                    <hr>
+                  `;
+                  productsContainer.appendChild(productContainer);
+          
+                  // Add event listener for delete button
+                  const deleteButton = productContainer.querySelector('.deleteButton');
+                  if (deleteButton) {
+                    deleteButton.addEventListener('click', async function () {
+                      await remove(ref(db, `carts/${cartId}`));
+                    });
+                  }
+                });
+              });
+            });
+          }
+          
+        function getProductData(productId, callback) {
+          const productRef = ref(db, "products");
         
+          onValue(productRef, (snapshot) => {
+            snapshot.forEach((product) => {
+              const productData = product.val();
+              const productID = product.key;
+        
+              if (productID === productId) {
+                callback(productData);
+              }
+            });
+          });
+        }
+
+        
+window.addEventListener('load', viewCarts);
