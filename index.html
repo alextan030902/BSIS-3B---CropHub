@@ -18,87 +18,80 @@
 </head>
 <!-- Header Section -->
 <header>
-    <div class="px-3 py-2 text-bg-dark border-bottom">
-      <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-          <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
-            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      
+        <div class="logo-holder logo-6">
+          <a href="">
+            <h3>CropHub <span>Ecommerce</span></h3>
           </a>
+        </div>
+      
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#products-container">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#message-container">Contact</a>
+          </li>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control" type="search" id="search_field" placeholder="Search" aria-label="Search">
+          </form>
 
-          <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
-            <li>
-              <a href="#" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#speedometer2"></use></svg>
-                About us
-              </a>
-            </li>
-            <li>
-              <a href="#products-container" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#grid"></use></svg>
-                Products
-              </a>
-            </li>
-            <li>
-              <a href="#featured" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#people-circle"></use></svg>
-                Features
-              </a>
-            </li>
-            <span id="fullName">Log in as: </span>
-          </ul>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-body-emphasis" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="bi bi-person-circle"></i> User
+          </a>
+            <div class="dropdown-menu text-center" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#">Sign in as: <span id="fullName"></span></a>
+                <div class="dropdown-divider"></div>
+                <button type="button" class="btn btn-warning mx-auto" id="logoutButton">Logout</button>
+            </div>
+        </li>
+        
+        </ul>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
+            <i class="bi bi-cart-fill"></i>
+            <span id="cart-badge" class="badge bg-warning">0</span>
+          </button>
+        
+          <a href="login.html" class="btn btn-primary" id="loginButton">Login</a>
+        </div>
+        
+       
+      </div>
+    </div>
+  </nav>
+
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Cart</h4>
+        </div>
+        <div class="modal-body text-left">
+          <div id="cart-container" class="container">
+            <!-- Your content goes here -->
+          </div>
+        </div>
+        <div id="total-price" class="container mt-4">Total Price: 0.00</div>
+        <div class="modal-footer">
+          <a href="checkout.html">
+            <button type="button" class="btn btn-warning" id="checkoutButton">Checkout</button>
+          </a>
+          <button type="button" class="btn btn-danger" id="closeModalButton">Close</button>
         </div>
       </div>
     </div>
-    <div class="px-3 py-2 border-bottom mb-3">
-      <div class="container d-flex flex-wrap justify-content-center">
-
-      <!-- Search Form -->
-      <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
-         <input class="form-control mr-sm-2" type="search" id="search_field" placeholder="Search" aria-label="Search">
-       </form>
-
-     <div class="text-end">
-      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
-        <i class="bi bi-cart-fill"></i>
-        <span id="cart-badge" class="badge bg-warning">0</span>
-      </button>
-      
-      <a href="login.html">
-        <button type="button" class="btn btn-primary" id="loginButton">Login</button>
-      </a>
-        <button type="button" class="btn btn-warning" id="logoutButton">Logout</button>
-
-      <div class="modal" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-    
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Cart</h4>
-                </div>
-    
-                <!-- Modal Body -->
-                <div class="modal-body text-left">
-                    <div id="cart-container" class="container">
-                        <!-- Your content goes here -->
-                    </div>
-                </div>
-
-                
-                <div id="total-price"class="container mt-4">Total Price: 0.00</div>
-    
-                <!-- Modal Footer -->
-                <div class="modal-footer">
-                  <a href="checkout.html">
-                    <button type="button" class="btn btn-warning" id="checkoutButton">Checkout</button>
-                  </a>
-                  
-                  <button type="button" class="btn btn-danger" id="closeModalButton">Close</button>
-              </div>
-    
-            </div>
-        </div>
-    </div>
+  </div>
 </header>
 
 
@@ -124,52 +117,50 @@
 </main>
 
 
-
-
-
 <div class="container px-4 py-5" id="featured">
-   <h2 class="pb-2 border-bottom">Columns with icons</h2>
+   <h2 class="pb-2 border-bottom">Features</h2>
    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-     <div class="feature col">
-       <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-         <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"/></svg>
-       </div>
-       <h3 class="fs-2 text-body-emphasis">Featured title</h3>
-       <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-       <a href="#" class="icon-link">
+    <div class="feature col">
+      <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+         <img src="/img/cod.png" alt="Featured Image">
+      </div>
+      <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+      <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+      <a href="#" class="icon-link">
          Call to action
          <svg class="bi"><use xlink:href="#chevron-right"/></svg>
-       </a>
-     </div>
-     <div class="feature col">
-       <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-         <svg class="bi" width="1em" height="1em"><use xlink:href="#people-circle"/></svg>
-       </div>
-       <h3 class="fs-2 text-body-emphasis">Featured title</h3>
-       <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-       <a href="#" class="icon-link">
-         Call to action
-         <svg class="bi"><use xlink:href="#chevron-right"/></svg>
-       </a>
-     </div>
-     <div class="feature col">
-       <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-         <svg class="bi" width="1em" height="1em"><use xlink:href="#toggles2"/></svg>
-       </div>
-       <h3 class="fs-2 text-body-emphasis">Featured title</h3>
-       <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-       <a href="#" class="icon-link">
-         Call to action
-         <svg class="bi"><use xlink:href="#chevron-right"/></svg>
-       </a>
-     </div>
+      </a>
+   </div>
+   
+   <div class="feature col">
+    <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+       <img src="/img/cod.png" alt="Featured Image">
+    </div>
+    <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+    <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+    <a href="#" class="icon-link">
+       Call to action
+       <svg class="bi"><use xlink:href="#chevron-right"/></svg>
+    </a>
+ </div>
+ <div class="feature col">
+  <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+     <img src="/img/download.png" alt="Featured Image">
+  </div>
+  <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+  <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+  <a href="#" class="icon-link">
+     Call to action
+     <svg class="bi"><use xlink:href="#chevron-right"/></svg>
+  </a>
+</div>
    </div>
  </div>
 
 
 <!-- Body End Section -->
 
-<div class="container">
+<div id="message-container">
   <div class="row">
     <div class="col-md-6">
       <div class="contact1-pic js-tilt" data-tilt="" style="will-change: transform; transform: perspective(300px) rotateX(0deg) rotateY(0deg);">

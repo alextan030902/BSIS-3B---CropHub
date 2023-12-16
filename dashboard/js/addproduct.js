@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
-
+import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,39 +16,44 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getDatabase();  // Use getDatabase to get a reference to the database
+const db = getDatabase();
+const storage = getStorage();
 
 var addProduct = document.getElementById('addProduct');
 
-// Add a click event listener to the Checkout button
-addProduct.addEventListener('click', function() {
-
+// Add a click event listener to the Add Product button
+addProduct.addEventListener('click', async function() {
+    // Get product information from input fields
     const name = document.getElementById('name').value;
     const price = document.getElementById('price').value;
-    const deSC = document.getElementById('deSC').value
-    const image = document.getElementById('image').value;
+    const deSC = document.getElementById('deSC').value;
+    const itemImage = document.getElementById("itemImage").files[0];
 
-    console.log (name,price,deSC,image);
+    // Upload image to Firebase Storage
+    const storageBucketRef = storageRef(storage, "item_images");
+    const imageFileName = `${Date.now()}_${itemImage.name}`;
+    const imageRef = storageRef(storageBucketRef, imageFileName);
+    await uploadBytes(imageRef, itemImage);
+
+    // Get the download URL of the uploaded image
+    const imageUrl = await getDownloadURL(imageRef);
+
+    // Create a products object with image URL
     const products = {
         name: name,
         price: price,
         deSC: deSC,
-        image: image
-    }
+        image: imageUrl // Add image URL to the products object
+    };
 
+    // Add product data to the Realtime Database
     const productsRef = ref(db, "products");
     const newProductsRef = push(productsRef);
-    set(newProductsRef, products)
-        .then(() => {
-        console.log("User successfully registered");
-        
-        })
-        .catch((error) => {
-        console.error(
-            "Error creating user in Firebase Realtime Database:",
-            error
-        );
-    
-    })
-        
+
+    try {
+        await set(newProductsRef, products);
+        console.log("Product added successfully");
+    } catch (error) {
+        console.error("Error adding product to Firebase Realtime Database:", error);
+    }
 });

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, set, push, onValue} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -14,8 +14,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase();
+const app = initializeApp(firebaseConfig);
+const db = getDatabase();
 
 document.addEventListener('DOMContentLoaded', function () {
     // Add a click event listener to the Submit button
@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.getElementById('email').value;
         const paymentMethod = document.getElementById('paymentMethod').value;
 
-
         // Validate form data (you can add more validation as needed)
 
         // Create an orders object
@@ -39,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
             address: address,
             email: email,
             paymentMethod: paymentMethod
-            
         };
 
         // Get a reference to the "orders" collection in the database
@@ -50,7 +48,9 @@ document.addEventListener('DOMContentLoaded', function () {
         set(newOrdersRef, orders)
             .then(() => {
                 console.log("Order successfully placed");
-                // You can redirect the user to a confirmation page or perform other actions here
+
+                // Redirect the user to the order summary page or perform other actions
+                window.location.href = "index.html";
             })
             .catch((error) => {
                 console.error("Error creating orders in Firebase Realtime Database:", error);
@@ -113,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
                   productContainer.innerHTML = `
                     <p>Product Name: ${productData.name}</p>
                     <p>Product Price: ${productData.price}</p>
-                    <p>Product Image: ${productData.image}</p>
                     <button class="btn btn-danger deleteButton" data-cartId="${cartId}">Delete</button>
                     <hr>
                   `;

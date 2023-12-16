@@ -133,6 +133,7 @@ function displayAllProducts() {
 
 
   const addToCart = document.getElementById('products-container'); // assuming element ID
+  
 
   addToCart.addEventListener("click", async function (event) {
     if (event.target && event.target.id === 'addToCart') {
@@ -278,7 +279,6 @@ function displayAllProducts() {
             <p>User ID: ${userId}</p>
             <p>Product Name: ${productData.name}</p>
             <p>Product Price: ${productData.price}</p>
-            <p>Product Image: ${productData.image}</p>
             <p>Quantity: <input type='number' name= 'quantity' id='quantity'value='${cartData.quantity}'></p>
             <button class="btn btn-danger deleteButton" data-cartId="${cartId}">Delete</button>
             <hr>
@@ -481,11 +481,3 @@ document.getElementById("email").value = email;
 
 
 
-// const itemImage = document.getElementById("itemImage").files[0];
-// const storage = getStorage();
-// const storageBucketRef = storageRef(storage, "item_images");
-// const imageFileName = ${Date.now()}_${itemImage.name};
-// const imageRef = storageRef(storageBucketRef, imageFileName);
-// await uploadBytes(imageRef, itemImage);
-// // Get the download URL of the uploaded image
-// const imageUrl = await getDownloadURL(imageRef);
