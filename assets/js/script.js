@@ -133,7 +133,6 @@ function displayAllProducts() {
 
 
   const addToCart = document.getElementById('products-container'); // assuming element ID
-  
 
   addToCart.addEventListener("click", async function (event) {
     if (event.target && event.target.id === 'addToCart') {
@@ -239,7 +238,7 @@ function displayAllProducts() {
     }
   });
 
-  getCount(); 
+ 
   
 
   let total = 0; // Declare total as a global variable
@@ -253,6 +252,7 @@ function displayAllProducts() {
     }
   
     const cartsRef = ref(db, "carts");
+    const currentuserId = localStorage.getItem('userId');
   
     // Reset total before processing the cart
     total = 0;
@@ -266,13 +266,11 @@ function displayAllProducts() {
         const productId = cartData.productId;
         const userId = cartData.userId;
   
-        getProductData(productId, (productData, quantity) => {
-          const productPrice = parseFloat(productData.price);
-          const itemTotal = productPrice * quantity;
-  
-          total += itemTotal;
-  
-          // Create HTML elements and populate them with product data
+        getProductData(productId, (productData) => {
+          
+        
+          if (currentuserId === userId) {
+               // Create HTML elements and populate them with product data
           const productContainer = document.createElement('div');
           productContainer.setAttribute('data-cartId', cartId);
           productContainer.innerHTML = `
@@ -292,28 +290,27 @@ function displayAllProducts() {
           if (deleteButton) {
             deleteButton.addEventListener('click', async function () {
               await remove(ref(db, `carts/${cartId}`));
-              getCount(); // Call getCount after removing an item from the cart
-              updateTotal(); // Update the total after removing an item
+              
             });
           }
+          getCount();
+          }
+
+       
         });
       });
   
-      updateTotal(); // Update the total after processing the entire cart
     });
   }
   
-  function updateTotal() {
-    // Display or use the total wherever needed
-    console.log(`Total Price: ${total}`);
-    // Update your HTML element with the total
-    document.getElementById('total-price').textContent = total.toFixed(2);
-  }
+  // function updateTotal() {
+  //   // Display or use the total wherever needed
+  //   console.log(`Total Price: ${total}`);
+  //   // Update your HTML element with the total
+  //   document.getElementById('total-price').textContent = total.toFixed(2);
+  // }
   
-  // Call getCount when the page loads to initialize the cart count
-  getCount();
   
-
   function getCount() {
     const cartsRef = ref(db, "carts");
   

@@ -18,37 +18,3 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();  // Use getDatabase to get a reference to the database
 
-var addProduct = document.getElementById('addProduct');
-
-// Add a click event listener to the Checkout button
-addProduct.addEventListener('click', function() {
-
-    const name = document.getElementById('name').value;
-    const price = document.getElementById('price').value;
-    const deSC = document.getElementById('deSC').value
-    const image = document.getElementById('image').value;
-
-    console.log (name,price,deSC,image);
-    const products = {
-        name: name,
-        price: price,
-        deSC: deSC,
-        image: image
-    }
-
-    const productsRef = ref(db, "products");
-    const newProductsRef = push(productsRef);
-    set(newProductsRef, products)
-        .then(() => {
-        console.log("User successfully registered");
-        
-        })
-        .catch((error) => {
-        console.error(
-            "Error creating user in Firebase Realtime Database:",
-            error
-        );
-    
-    })
-        
-});
