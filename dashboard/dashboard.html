@@ -97,7 +97,7 @@
       </div>
     </div>
 
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-3">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
       </div>
@@ -107,35 +107,27 @@
           <div class="box-container">
             <div class="box">
               <h3>Total Pendings</h3>
-              <p>77</p>
+              <p id="totalPending">0</p>
             </div>
             <div class="box">
               <h3>Completed Payments</h3>
-              <p>77</p>
+              <p id="completedPayments">0</p>
             </div>
             <div class="box">
               <h3>Orders Placed</h3>
-              <p>77</p>
+              <p id="totalOrders">0</p>
             </div>
             <div class="box">
               <h3>Products Added</h3>
-              <p>77</p>
-            </div>
-            <div class="box">
-              <h3>Normal Users</h3>
-              <p>77</p>
-            </div>
-            <div class="box">
-              <h3>Admin Users</h3>
-              <p>77</p>
+              <p id="productsAdded">0</p>
             </div>
             <div class="box">
               <h3>Total Accounts</h3>
-              <p>77</p>
+              <p id="totalUsers">0</p>
             </div>
             <div class="box">
               <h3>New Messages</h3>
-              <p>77</p>
+              <p id="totalMessages">0</p>
             </div>
           </div>
         </div>
@@ -145,5 +137,5 @@
       
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script>
-    <script src=""></script></body>
+    <script type="module" src="/dashboard/js/dashboard.js"></script></body>
 </html>

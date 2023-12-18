@@ -240,9 +240,6 @@ function displayAllProducts() {
 
  
   
-
-  let total = 0; // Declare total as a global variable
-
   function viewCarts() {
     const productsContainer = document.getElementById('cart-container');
   
@@ -254,8 +251,7 @@ function displayAllProducts() {
     const cartsRef = ref(db, "carts");
     const currentuserId = localStorage.getItem('userId');
   
-    // Reset total before processing the cart
-    total = 0;
+    
   
     onValue(cartsRef, (snapshot) => {
       productsContainer.innerHTML = ""; // Clear the container
@@ -302,14 +298,7 @@ function displayAllProducts() {
   
     });
   }
-  
-  // function updateTotal() {
-  //   // Display or use the total wherever needed
-  //   console.log(`Total Price: ${total}`);
-  //   // Update your HTML element with the total
-  //   document.getElementById('total-price').textContent = total.toFixed(2);
-  // }
-  
+
   
   function getCount() {
     const cartsRef = ref(db, "carts");
