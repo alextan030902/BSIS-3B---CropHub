@@ -68,6 +68,7 @@ function tableOrders() {
             // Check if all orders for the user have been processed
             if (userOrdersMap.get(userId).length === userOrdersCount(userId, snapshot)) {
               displayUserOrders(userId, userName, userOrdersMap.get(userId));
+              alert('Orders loaded successfully!');
             }
           });
         }
@@ -86,7 +87,7 @@ function userOrdersCount(userId, snapshot) {
   return count;
 }
 
-function displayUserOrders(userId, userName, orders) {
+async function displayUserOrders(userId, userName, orders) {
   const orderTableContainer = document.getElementById('orderTable');
 
   // Create HTML table for user's name
@@ -173,6 +174,7 @@ function displayUserOrders(userId, userName, orders) {
       // Update the status in the database
       await set(ref(db, `orders/${orderId}/status`), newStatus);
     }));
+    alert('Orders updated successfully!');
   });
 
   // Add event listener for delete all button
@@ -186,6 +188,7 @@ function displayUserOrders(userId, userName, orders) {
     // Remove the entire user order table after deletion
     userOrderTable.remove();
     userNameTable.remove();
+    alert('Orders deleted successfully!');
   });
 }
 

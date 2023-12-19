@@ -71,27 +71,35 @@
     </div>
   </nav>
 
-  <div class="modal" id="myModal">
-    <div class="modal-dialog">
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Cart</h4>
+        <div class="modal-header bg-dark text-light">
+          <h5 class="modal-title" id="exampleModalLabel">Shopping Cart</h5>
+          </button>
         </div>
-        <div class="modal-body text-left">
+        <div class="modal-body">
           <div id="cart-container" class="container">
             <!-- Your content goes here -->
           </div>
         </div>
-        <div id="total-price" class="container mt-4">Total Price: 0.00</div>
         <div class="modal-footer">
-          <a href="checkout.html">
-            <button type="button" class="btn btn-warning" id="checkoutButton">Checkout</button>
-          </a>
-          <button type="button" class="btn btn-danger" id="closeModalButton">Close</button>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-6 text-left">
+                <p id="totalPrice">Total Price: $0.00</p>
+              </div>
+              <div class="col-md-6 text-right">
+                <a href="checkout.html" class="btn btn-warning" id="checkoutButton">Checkout</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="closeModalButton">Close</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+  
 </header>
 
 
@@ -118,45 +126,48 @@
 
 
 <div class="container px-4 py-5" id="featured">
-   <h2 class="pb-2 border-bottom">Features</h2>
-   <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+  <h2 class="pb-2 border-bottom">Features</h2>
+  <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+    <!-- Feature 1 -->
     <div class="feature col">
-      <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-         <img src="/img/cod.png" alt="Featured Image">
+      <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"> 
+        <img src="/img/cod.png" alt="Featured Image">
       </div>
       <h3 class="fs-2 text-body-emphasis">Featured title</h3>
       <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
       <a href="#" class="icon-link">
-         Call to action
-         <svg class="bi"><use xlink:href="#chevron-right"/></svg>
+        Call to action
+        <svg class="bi"><use xlink:href="#chevron-right"/></svg>
       </a>
-   </div>
-   
-   <div class="feature col">
-    <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-       <img src="/img/cod.png" alt="Featured Image">
     </div>
-    <h3 class="fs-2 text-body-emphasis">Featured title</h3>
-    <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-    <a href="#" class="icon-link">
-       Call to action
-       <svg class="bi"><use xlink:href="#chevron-right"/></svg>
-    </a>
- </div>
- <div class="feature col">
-  <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-     <img src="/img/download.png" alt="Featured Image">
-  </div>
-  <h3 class="fs-2 text-body-emphasis">Featured title</h3>
-  <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-  <a href="#" class="icon-link">
-     Call to action
-     <svg class="bi"><use xlink:href="#chevron-right"/></svg>
-  </a>
-</div>
-   </div>
- </div>
 
+    <!-- Feature 2 -->
+    <div class="feature col">
+      <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+        <img src="/img/gfresh.jpg" alt="Featured Image">
+      </div>
+      <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+      <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+      <a href="#" class="icon-link">
+        Call to action
+        <svg class="bi"><use xlink:href="#chevron-right"/></svg>
+      </a>
+    </div>
+
+    <!-- Feature 3 -->
+    <div class="feature col">
+      <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+        <img src="/img/download.png" alt="Featured Image">
+      </div>
+      <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+      <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+      <a href="#" class="icon-link">
+        Call to action
+        <svg class="bi"><use xlink:href="#chevron-right"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
 
 <!-- Body End Section -->
 
@@ -210,8 +221,7 @@
     <ul class="nav col-md-4 justify-content-end">
       <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
       <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Products</a></li>
       <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
     </ul>
   </footer>

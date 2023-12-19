@@ -18,54 +18,60 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();  // Use getDatabase to get a reference to the database
 
+// Function to calculate the total price of items in the cart and update the UI
 
 function displayAllProducts() {
-    const productsContainer = document.getElementById('products-container');
-  
-    // Check if the container exists
-    if (!productsContainer) {
-      console.error("Products container not found");
-      return;
-    }
-  
-    const productsRef = ref(db, "products");
-  
-    onValue(productsRef, (snapshot) => {
-      // Clear the container
-      productsContainer.innerHTML = "";
+  const productsContainer = document.getElementById('products-container');
 
-      // Create a single row to hold all product columns
+  // Check if the container exists
+  if (!productsContainer) {
+    console.error("Products container not found");
+    return;
+  }
+
+  const productsRef = ref(db, "products");
+
+  onValue(productsRef, (snapshot) => {
+    // Clear the container
+    productsContainer.innerHTML = "";
+
+    // Create a single row to hold all product columns
     const row = document.createElement('div');
     row.classList.add('row', 'g-4');
-  
-      snapshot.forEach((userSnapshot) => {
-        const userData = userSnapshot.val();
-        const productID = userSnapshot.key;
-        const productName = userData.name;
-        const productPrice = userData.price;
-        const productImage = userData.image;
-        const productDescription = userData.description; // assuming description exists   
-       
-        
-         // Create a column for each product card
+
+    snapshot.forEach((userSnapshot) => {
+      const userData = userSnapshot.val();
+      const productID = userSnapshot.key;
+      const productName = userData.name;
+      const productPrice = userData.price;
+      const productImage = userData.image;
+      const productDescription = userData.deSC;
+
+      // Create a column for each product card
       const col = document.createElement('div');
       col.classList.add('col-md-4'); // Adjust the column size as needed
 
       // Create and populate HTML elements for each product card
-      const cardElement = document.createElement('div');
-      cardElement.classList.add('card');
-
-    //   Create and populate HTML elements
-      cardElement.classList.add('col');
-      cardElement.classList.add('card');
+      const cardElement = document.createElement('div'); 
+      cardElement.classList.add('card', 'col');
       cardElement.setAttribute('data-productId', productID);
       cardElement.setAttribute('id', 'productId');
+
+      // Create a container for the image with a fixed height
+      const imageContainer = document.createElement('div');
+      imageContainer.classList.add('image-container');
 
       const imageElement = document.createElement('img');
       imageElement.src = productImage;
       imageElement.classList.add('card-img-top');
       imageElement.setAttribute('id', 'productImage');
       imageElement.alt = productName;
+
+      // Append the image to the container
+      imageContainer.appendChild(imageElement);
+
+      // Add the image container to the card
+      cardElement.appendChild(imageContainer);
 
       const cardBody = document.createElement('div');
       cardBody.classList.add('card-body');
@@ -78,57 +84,47 @@ function displayAllProducts() {
       const cardDescription = document.createElement('p');
       cardDescription.classList.add('card-description');
       cardDescription.setAttribute('id', 'productDesc');
-      cardDescription.textContent = `${productDescription}`;
-
+      cardDescription.textContent = productDescription ? `${productDescription}` : '';
 
       const cardText = document.createElement('p');
       cardText.classList.add('card-text');
       cardText.setAttribute('id', 'productPrice');
-      cardText.textContent = `(Price: $${productPrice})`;
+      cardText.textContent = `(Price: ₱${productPrice})`;
 
-      const cardQty = document.createElement('p'); // Create a paragraph element
-      const inputElement = document.createElement('input'); // Create an input element
+      const cardQty = document.createElement('p');
+      const inputElement = document.createElement('input');
       cardQty.appendChild(inputElement);
-      inputElement.type = 'number'; // Set the input type correctly
-      inputElement.classList.add('card-text'); // Add the desired class
-      inputElement.setAttribute('id', 'productQty'); // Set the ID attribute
+      inputElement.type = 'number';
+      inputElement.classList.add('card-text');
+      inputElement.setAttribute('id', 'productQty');
 
-      
       const addToCartButton = document.createElement('button');
       addToCartButton.classList.add('btn', 'btn-primary', 'me-2');
       addToCartButton.setAttribute('id', 'addToCart');
       addToCartButton.textContent = 'Add to cart';
 
-      
-
-      // Append elements to the card
+      // Append elements to the cardBody
       cardBody.appendChild(cardTitle);
+      cardBody.appendChild(cardDescription);
       cardBody.appendChild(cardText);
       cardBody.appendChild(cardQty);
       cardBody.appendChild(addToCartButton);
-      
 
-      
-      
-
-      cardElement.appendChild(imageElement);
+      // Add cardBody to cardElement
       cardElement.appendChild(cardBody);
 
-      // Add card to container
-      productsContainer.appendChild(cardElement);
-
-     
+      // Add cardElement to container
       col.appendChild(cardElement);
 
       // Append the column to the row
       row.appendChild(col);
-
-      });
-       // Append the row to the products container
-    productsContainer.appendChild(row);
     });
-  }
-  
+
+    // Append the row to the products container
+    productsContainer.appendChild(row);
+  });
+}
+
   window.addEventListener('load', displayAllProducts);
 
 
@@ -193,6 +189,7 @@ function displayAllProducts() {
                   update(updateCartRef, { quantity: updatedQuantity })
                     .then(() => {
                       console.log("Item updated successfully");
+                      alert("Item updated successfully in the cart!");
                     })
                     .catch((error) => {
                       console.error(
@@ -205,6 +202,7 @@ function displayAllProducts() {
   
               if (!productExists) {
                 console.log("Adding new item to the cart");
+
                 const newCartRef = push(cartsRef);
                 const cart = {
                   userId: userId,
@@ -216,6 +214,7 @@ function displayAllProducts() {
                 set(newCartRef, cart)
                   .then(() => {
                     console.log("Item added successfully");
+                    alert("Item added successfully to the cart!");
                   })
                   .catch((error) => {
                     console.error(
@@ -238,79 +237,122 @@ function displayAllProducts() {
     }
   });
 
- 
-  
-  function viewCarts() {
-    const productsContainer = document.getElementById('cart-container');
-  
-    if (!productsContainer) {
-      console.error("Cart container not found");
-      return;
-    }
-  
+  function calculateTotalPrice() {
     const cartsRef = ref(db, "carts");
     const currentuserId = localStorage.getItem('userId');
-  
-    
+    let totalPrice = 0;
   
     onValue(cartsRef, (snapshot) => {
-      productsContainer.innerHTML = ""; // Clear the container
+      let cartEmpty = true; // Assume the cart is empty by default
   
       snapshot.forEach((cart) => {
         const cartData = cart.val();
-        const cartId = cart.key;
-        const productId = cartData.productId;
         const userId = cartData.userId;
   
-        getProductData(productId, (productData) => {
-          
-        
-          if (currentuserId === userId) {
-               // Create HTML elements and populate them with product data
+        if (currentuserId === userId) {
+          const productId = cartData.productId;
+          const quantity = cartData.quantity;
+  
+          getProductData(productId, (productData) => {
+            const productPrice = productData.price;
+            totalPrice += quantity * productPrice;
+          });
+  
+          cartEmpty = false; // Set to false if there's at least one item in the cart
+        }
+      });
+  
+      if (cartEmpty) {
+        // Update the UI with the total price only if the cart is not empty
+        document.getElementById('totalPrice').textContent = "";
+      } else {
+        // Update the UI with the total price
+        document.getElementById('totalPrice').textContent = `₱${totalPrice.toFixed(2)}`;
+      }
+    });
+  }
+  
+
+function getCount() {
+  const cartsRef = ref(db, "carts");
+
+  onValue(cartsRef, (snapshot) => {
+    const count = snapshot.val() ? Object.keys(snapshot.val()).length : 0;
+    console.log(`Number of carts: ${count}`);
+    document.getElementById('cart-badge').textContent = count;
+  });
+}
+
+
+function viewCarts() {
+  const productsContainer = document.getElementById('cart-container');
+
+  if (!productsContainer) {
+    console.error("Cart container not found");
+    return;
+  }
+
+  const cartsRef = ref(db, "carts");
+  const currentuserId = localStorage.getItem('userId');
+
+  onValue(cartsRef, (snapshot) => {
+    productsContainer.innerHTML = ""; // Clear the container
+
+    snapshot.forEach((cart) => {
+      const cartData = cart.val();
+      const cartId = cart.key;
+      const productId = cartData.productId;
+      const userId = cartData.userId;
+
+      getProductData(productId, (productData) => {
+        if (currentuserId === userId) {
+          // Create HTML elements and populate them with product data
           const productContainer = document.createElement('div');
           productContainer.setAttribute('data-cartId', cartId);
           productContainer.innerHTML = `
-            <p>User ID: ${userId}</p>
             <p>Product Name: ${productData.name}</p>
             <p>Product Price: ${productData.price}</p>
-            <p>Quantity: <input type='number' name= 'quantity' id='quantity'value='${cartData.quantity}'></p>
-            <button class="btn btn-danger deleteButton" data-cartId="${cartId}">Delete</button>
-            <hr>
-          `;
+            <p>Quantity: <input type='number' name='quantity' class='quantityInput' data-cartId='${cartId}' value='${cartData.quantity}'></p>
+            <button class="btn btn-danger deleteButton" data-cartId="${cartId}">Delete</button> <hr>`;
           productsContainer.appendChild(productContainer);
-  
-          document.getElementById('quantity').value = cartData.quantity;
-  
+
+          // Add event listener for quantity input changes
+          const quantityInput = productContainer.querySelector('.quantityInput');
+          if (quantityInput) {
+            quantityInput.addEventListener('input', function () {
+              const newQuantity = parseInt(this.value, 10) || 0;
+              updateCartQuantity(cartId, newQuantity);
+            });
+          }
+
           // Add event listener for delete button
           const deleteButton = productContainer.querySelector('.deleteButton');
           if (deleteButton) {
             deleteButton.addEventListener('click', async function () {
               await remove(ref(db, `carts/${cartId}`));
-              
             });
           }
+
           getCount();
-          }
-
-       
-        });
+        }
       });
-  
     });
-  }
+  });
+}
 
-  
-  function getCount() {
-    const cartsRef = ref(db, "carts");
-  
-    onValue(cartsRef, (snapshot) => {
-      const count = snapshot.val() ? Object.keys(snapshot.val()).length : 0;
-      console.log(`Number of carts: ${count}`);
-      document.getElementById('cart-badge').textContent = count;
+function updateCartQuantity(cartId, newQuantity) {
+  const updateCartRef = ref(db, `carts/${cartId}`);
+
+  update(updateCartRef, { quantity: newQuantity })
+    .then(() => {
+      console.log("Item quantity updated successfully");
+      calculateTotalPrice(); // Recalculate total price after updating quantity
+    })
+    .catch((error) => {
+      console.error("Error updating item quantity in Firebase Realtime Database:", error);
     });
-  }
-  
-  
+}
+
 function getProductData(productId, callback) {
   const productRef = ref(db, "products");
 
@@ -325,7 +367,6 @@ function getProductData(productId, callback) {
     });
   });
 }
-
 
 function getUserData() {
   return new Promise((resolve, reject) => {
@@ -360,6 +401,11 @@ function getUserData() {
   });
 }
 
+// Call the calculateTotalPrice function when the page is loaded
+window.addEventListener('load', calculateTotalPrice);
+
+// Call the viewCarts function when the page is loaded
+window.addEventListener('load', viewCarts);
 // Example of using the function
 getUserData()
   .then(({ userId, name }) => {
@@ -418,6 +464,7 @@ document.addEventListener('DOMContentLoaded', function () {
     push(messagesRef, newMessage)
       .then(() => {
         console.log("Message successfully sent!");
+        alert("Message successfully sent!");
         // You can redirect the user to a confirmation page or perform other actions here
       })
       .catch((error) => {
@@ -462,8 +509,4 @@ document.addEventListener('click', function(event) {
 
 const email = localStorage.getItem("userEmail");
 document.getElementById("email").value = email;
-
-
-
-
 
