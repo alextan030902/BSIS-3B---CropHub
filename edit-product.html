@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.118.2">
-    <title>Dashboard</title>
+    <title>Products</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
@@ -21,8 +21,8 @@
     <!-- Custom styles for this template -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="css/dashboard.css" rel="stylesheet">
-    <link href="css/dashboard.rtl.css" rel="stylesheet">
+    <link href="/assets/dist/css/dashboard.css" rel="stylesheet">
+    <link href="/assets/dist/css/dashboard.rtl.css" rel="stylesheet">
   </head>
   <body>
 
@@ -64,7 +64,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" href="orders.html">
+              <a class="nav-link d-flex align-items-center gap-2" href="#">
                 <svg class="bi"><use xlink:href="#file-earmark"/></svg>
                 Orders
               </a>
@@ -78,7 +78,19 @@
             <li class="nav-item">
               <a class="nav-link d-flex align-items-center gap-2" href="#">
                 <svg class="bi"><use xlink:href="#people"/></svg>
-                Messages
+                Customers
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="#">
+                <svg class="bi"><use xlink:href="#graph-up"/></svg>
+                Reports
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="#">
+                <svg class="bi"><use xlink:href="#puzzle"/></svg>
+                Integrations
               </a>
             </li>
           </ul>
@@ -87,56 +99,58 @@
 
           <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-              <a id="signOutLink" class="nav-link d-flex align-items-center gap-2" href="#">
+              <a class="nav-link d-flex align-items-center gap-2" href="#">
+                <svg class="bi"><use xlink:href="#gear-wide-connected"/></svg>
+                Settings
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="#">
                 <svg class="bi"><use xlink:href="#door-closed"/></svg>
                 Sign out
               </a>
             </li>
           </ul>
-          
         </div>
       </div>
     </div>
 
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-3">
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
+        <h1 class="h2">Edit Product</h1>
       </div>
-    
-      <div class="container">
-        <div class="dashboard">
-          <div class="box-container">
-            <div class="box">
-              <h3>Total Pendings</h3>
-              <p id="totalPending">0</p>
+
+        <a href="products.html" class="btn btn-primary mb-3">Back</a>
+
+      <div class="border p-5" style="max-width: 600px; margin: 0 auto;">
+        <form action="">
+        <div class="row g-3">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Name" id="name" aria-label="Name">
             </div>
-            <div class="box">
-              <h3>Completed Payments</h3>
-              <p id="totalCompleted">0</p>
+            <div class="col">
+              <input type="number" class="form-control" placeholder="Price" id="price" aria-label="Price">
             </div>
-            <div class="box">
-              <h3>Orders Placed</h3>
-              <p id="totalOrders">0</p>
-            </div>
-            <div class="box">
-              <h3>Products Added</h3>
-              <p id="productsAdded">0</p>
-            </div>
-            <div class="box">
-              <h3>Total Accounts</h3>
-              <p id="totalUsers">0</p>
-            </div>
-            <div class="box">
-              <h3>New Messages</h3>
-              <p id="totalMessages">0</p>
-            </div>
+            <div class="mb-3 col-12">
+                <label for="formFile" class="form-label">Image</label>
+                <input class="form-control" type="file" id="image">
+              </div>
           </div>
-        </div>
-      </div>
-    </main>
-    
-      
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-primary" type="button" id="addProduct">Submit</button>
+          </div>  
+
+
+      </form>
+    </div>
+
+
+
+
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script>
-    <script type="module" src="/dashboard/js/dashboard.js"></script></body>
+    <script type="module" src="/dashboard/js/products.js"></script>
+</body>
 </html>
