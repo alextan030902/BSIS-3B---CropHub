@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, set, push, onValue, update, get} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import { getDatabase, ref, set, push, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -65,8 +65,16 @@ function viewCarts() {
 
         // Display the total cart price
         const totalContainer = document.createElement('div');
-        totalContainer.innerHTML = `<p>Total Cart Price: ${totalCartPrice}</p>`;
         productsContainer.appendChild(totalContainer);
+      
+        setTimeout(function(){ 
+            const totalContainer = document.createElement('div');
+            totalContainer.innerHTML = `<p>Total Cart Price: ${totalCartPrice}</p>`;
+          
+        productsContainer.appendChild(totalContainer);
+
+
+         }, 100);
     });
 }
 
@@ -95,15 +103,17 @@ document.addEventListener('DOMContentLoaded', function () {
         const name = document.getElementById('fullName').value;
         const address = document.getElementById('address').value;
         const email = document.getElementById('email').value;
+        const phone = document.getElementById('pnumber').value; // Added phone
         const paymentMethod = document.getElementById('paymentMethod').value;
         const currentuserId = localStorage.getItem("userId");
 
         // Validate form data (you can add more validation as needed)
 
         // Create an orders object
-        const users = {
+        const orders = {
             address: address,
-            paymentMethod: paymentMethod
+            paymentMethod: paymentMethod,
+            phone: phone // Added phone
         };
 
         // Get a reference to the "users" collection in the database
@@ -111,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             // Update the user's data
-            await update(usersRef, users);
+            await update(usersRef, orders);
             console.log("Update successfully!");
 
             // Now, add new orders
@@ -145,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         userId: currentuserId,
                         productId: productId,
                         quantity: quantity,
+                        phone: phone // Added phone
                     };
 
                     // Set the new order data and store the promise
@@ -152,16 +163,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
-            // Wait for all set promises to resolve
             await Promise.all(setPromises);
 
             console.log("Orders placed successfully!");
+            alert("Orders placed successfully!");
 
-            // Optionally, you can clear the user's cart after placing orders
-            // const userCartRef = ref(cartsRef, currentuserId);
-            // remove(userCartRef);
 
-            // Refresh the cart view after placing orders
+            window.location.href = 'index.html';
+           
+
+            // Display the updated cart after placing orders
             viewCarts();
         } catch (error) {
             console.error("Error updating user data or creating orders in Firebase Realtime Database:", error);
@@ -171,7 +182,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 window.addEventListener('load', viewCarts);
 
-function deleteProduct(productId) {
-    const productsRefToDelete = ref(db, `products/${productId}`);
-    remove(productsRefToDelete);
+
+function clearCart() {
+    // Get a reference to the "carts" collection in the database
+    const cartsRef = ref(db, "carts");
+
+    // Remove all data from the "carts" collection (assuming you want to clear the entire cart)
+    remove(cartsRef);
 }

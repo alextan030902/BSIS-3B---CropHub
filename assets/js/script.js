@@ -93,6 +93,7 @@ function displayAllProducts() {
 
       const cardQty = document.createElement('p');
       const inputElement = document.createElement('input');
+      inputElement.setAttribute('data-productId', productID);
       cardQty.appendChild(inputElement);
       inputElement.type = 'number';
       inputElement.classList.add('card-text');
@@ -127,6 +128,7 @@ function displayAllProducts() {
 
   window.addEventListener('load', displayAllProducts);
 
+  
 
   const addToCart = document.getElementById('products-container'); // assuming element ID
 
@@ -136,9 +138,7 @@ function displayAllProducts() {
         // Retrieve user data asynchronously
         const userData = await getUserData();
         const userId = userData.userId;
-        const quantityInput = document.getElementById("productQty");
-        const quantity = quantityInput.value;
-  
+        const quantity = event.target.parentElement.querySelector('#productQty').value
         // Check if quantity is a valid number
         if (isNaN(quantity) || quantity.trim() === "") {
           console.error("Invalid quantity input:", quantity);
@@ -237,41 +237,55 @@ function displayAllProducts() {
     }
   });
 
-  function calculateTotalPrice() {
-    const cartsRef = ref(db, "carts");
-    const currentuserId = localStorage.getItem('userId');
-    let totalPrice = 0;
-  
-    onValue(cartsRef, (snapshot) => {
-      let cartEmpty = true; // Assume the cart is empty by default
-  
-      snapshot.forEach((cart) => {
-        const cartData = cart.val();
-        const userId = cartData.userId;
-  
-        if (currentuserId === userId) {
-          const productId = cartData.productId;
-          const quantity = cartData.quantity;
-  
-          getProductData(productId, (productData) => {
-            const productPrice = productData.price;
-            totalPrice += quantity * productPrice;
-          });
-  
-          cartEmpty = false; // Set to false if there's at least one item in the cart
-        }
-      });
-  
-      if (cartEmpty) {
-        // Update the UI with the total price only if the cart is not empty
-        document.getElementById('totalPrice').textContent = "";
-      } else {
-        // Update the UI with the total price
-        document.getElementById('totalPrice').textContent = `₱${totalPrice.toFixed(2)}`;
+ let debounceTimer;
+
+function calculateTotalPrice() {
+  const cartsRef = ref(db, "carts");
+  const currentUserId = localStorage.getItem('userId');
+  let totalPrice = 0;
+
+  const getProductDataPromise = (productId) => new Promise((resolve, reject) => {
+    getProductData(productId, (productData) => {
+      resolve(productData);
+    });
+  });
+
+  onValue(cartsRef, async (snapshot) => {
+    let cartEmpty = true; 
+    const promises = [];
+
+    snapshot.forEach((cart) => {
+      const cartData = cart.val();
+      const userId = cartData.userId;
+
+      if (currentUserId === userId) {
+        const productId = cartData.productId;
+        const quantity = cartData.quantity;
+
+        const productDataPromise = getProductDataPromise(productId);
+        promises.push(productDataPromise.then((productData) => {
+          const productPrice = productData.price;
+          totalPrice += quantity * productPrice;
+        }));
+
+        cartEmpty = false; 
       }
     });
-  }
-  
+
+    await Promise.all(promises);
+
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      if (cartEmpty) {
+      
+        document.getElementById('totalPrice').textContent = "";
+      } else {
+        
+        document.getElementById('totalPrice').textContent = `₱${totalPrice.toFixed(2)}`;
+      }
+    }, 300); 
+  });
+}
 
 function getCount() {
   const cartsRef = ref(db, "carts");

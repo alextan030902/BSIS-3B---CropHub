@@ -12,7 +12,7 @@
     <div class="row">
         <!-- Billing Form -->
         <div class="col-md-6">
-            <h2>Billing Information</h2>
+            <h2 class="mb-4">Billing Information</h2>
             <form>
                 <div class="form-group">
                     <label for="fullName">Full Name</label>
@@ -27,24 +27,26 @@
                     <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
                 </div>
                 <div class="form-group">
-                  <label for="paymentMethod">Payment Method</label>
-                  <select class="form-control" id="paymentMethod" required>
-                      <option value="" disabled selected>Choose...</option>
-                      <option value="creditCard">Credit Card</option>
-                      <option value="paypal">PayPal</option>
-                      <!-- Add more payment options as needed -->
-                  </select>
-              </div>
-
+                    <label for="email">Phone Number</label>
+                    <input type="email" class="form-control" id="pnumber" placeholder="Enter your phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method</label>
+                    <select class="form-control" id="paymentMethod" required>
+                        <option value="" disabled selected>Choose...</option>
+                        <option value="creditCard">COD</option>
+                        <option value="paypal">PayPal</option>
+                        <!-- Add more payment options as needed -->
+                    </select>
+                </div>
                 <!-- Add more billing fields as needed -->
-
                 <button type="submit" class="btn btn-primary" id="placeOrders">Submit</button>
             </form>
         </div>
 
         <!-- Order Summary -->
         <div class="col-md-6">
-            <h2>Order Summary</h2>
+            <h2 class="mb-4">Order Summary</h2>
             <div id="cart-container" class="container">
 
 
@@ -53,9 +55,10 @@
 
 
 
-             <div id="totalPrice" class="container">Total:</div>
-                
-            </ul>
+
+
+        <div id="total-price" class="container">Total:</div>
+            </div>
         </div>
     </div>
 </div>
