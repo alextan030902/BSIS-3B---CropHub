@@ -70,7 +70,7 @@ function displayAllProducts() {
 
             const cardText = document.createElement('p');
             cardText.classList.add('card-text');
-            cardText.textContent = `(Price: $${productPrice})`;
+            cardText.textContent = `(Price: ₱${productPrice})`;
 
             const buttonGroup = document.createElement('div');
             buttonGroup.classList.add('d-grid', 'gap-2', 'd-md-block');

@@ -90,3 +90,6 @@ function signOut() {
 
 // Attach click event listener to the link
 document.getElementById("signOutLink").addEventListener("click", signOut);
+
+
+

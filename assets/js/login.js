@@ -1,9 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getDatabase, ref, set, onValue, push, get } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -21,10 +18,49 @@ const app = initializeApp(firebaseConfig);
 
 const loginForm = document.getElementById("loginForm");
 
-loginForm.addEventListener("submit", (event)=> {
+// Add this code after initializing Firebase and before setting up the loginForm event listener
+
+const createDefaultAdmin = () => {
+  const db = getDatabase();
+  const usersRef = ref(db, "users");
+
+  const defaultAdmin = {
+    email: "admin@example.com",
+    password: "adminpassword",
+    isAdmin: true,
+    firstname: "Admin",
+    lastname: "User"
+  };
+
+  // Check if the default admin already exists
+  onValue(usersRef, (snapshot) => {
+    let adminExists = false;
+
+    snapshot.forEach((userSnapshot) => {
+      const userData = userSnapshot.val();
+      const emailAddress = userData.email;
+
+      if (emailAddress === defaultAdmin.email) {
+        adminExists = true;
+      }
+    });
+
+    if (!adminExists) {
+      // Create the default admin user
+      const newAdminRef = push(usersRef);
+      set(newAdminRef, defaultAdmin);
+      console.log("Default admin account created.");
+    } else {
+      console.log("Default admin account already exists.");
+    }
+  });
+};
+
+// Call the function to create the default admin account
+createDefaultAdmin();
+
+loginForm.addEventListener("submit", async (event) => {
   event.preventDefault(); // Prevent the default form submission
-
-
 
   const email = document.getElementById("email").value;
   const password = document.getElementById("loginPassword").value;
@@ -32,23 +68,26 @@ loginForm.addEventListener("submit", (event)=> {
   const db = getDatabase();
   const usersRef = ref(db, "users");
 
-  let userID = "";
-  let userFound = false;
+  try {
+    const snapshot = await get(usersRef);
 
-  onValue(usersRef, (snapshot) => {
     snapshot.forEach((userSnapshot) => {
       const userData = userSnapshot.val();
       const userId = userSnapshot.key;
       const emailAddress = userData.email;
       const passwordData = userData.password;
-
-      // console.log(emailAddress, passwordData);
+      const isAdminUser = userData.isAdmin || false;
 
       if (emailAddress === email && passwordData === password) {
-        userFound = true;
-        userID = userId;
-        console.log("User successfully signed in:", userID);
+        if (isAdminUser) {
+          // Redirect admin to dashboard.html
+          window.location.href = "dashboard.html";
+        } else {
+          // Redirect regular user to index.html
+          window.location.href = "index.html";
+        }
 
+        // Store user information in localStorage
         localStorage.setItem("userId", userId);
         localStorage.setItem("userEmail", emailAddress);
         localStorage.setItem("userFirstname", userData.firstname);
@@ -61,17 +100,17 @@ loginForm.addEventListener("submit", (event)=> {
 
         setTimeout(() => {
           toast.hide();
-          window.location.href = "index.html";
         }, 1000);
 
         return; // Exit the loop if a user is found
       }
     });
 
-    if (!userFound) {
-      // Handle case where user is not found or credentials are incorrect
-      console.log("Invalid credentials");
-      // Display an error message or handle it accordingly
-    }
-  });
+    // If no user is found with the given credentials
+    console.log("Invalid credentials");
+    // Display an error message or handle it accordingly
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    // Handle the error, e.g., display an error message to the user
+  }
 });
