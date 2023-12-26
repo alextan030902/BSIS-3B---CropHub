@@ -219,3 +219,14 @@ function getUserData(userId, callback) {
 }
 
 window.addEventListener('load', tableOrders);
+
+function signOut() {
+  // Perform any sign-out logic here (e.g., clearing session, etc.)
+
+  // Redirect to the login page
+  window.location.href = "login.html";
+}
+
+// Attach click event listener to the link
+document.getElementById("signOutLink").addEventListener("click", signOut);
+
