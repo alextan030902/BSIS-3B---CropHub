@@ -289,10 +289,14 @@ function calculateTotalPrice() {
 
 function getCount() {
   const cartsRef = ref(db, "carts");
+  const currentUserId = localStorage.getItem('userId');
 
   onValue(cartsRef, (snapshot) => {
-    const count = snapshot.val() ? Object.keys(snapshot.val()).length : 0;
-    console.log(`Number of carts: ${count}`);
+    const count = snapshot.val()
+      ? Object.values(snapshot.val()).filter(cart => cart.userId === currentUserId).length
+      : 0;
+
+    console.log(`Number of carts for user ${currentUserId}: ${count}`);
     document.getElementById('cart-badge').textContent = count;
   });
 }
