@@ -237,55 +237,54 @@ function displayAllProducts() {
     }
   });
 
- let debounceTimer;
-
-function calculateTotalPrice() {
-  const cartsRef = ref(db, "carts");
-  const currentUserId = localStorage.getItem('userId');
-  let totalPrice = 0;
-
-  const getProductDataPromise = (productId) => new Promise((resolve, reject) => {
-    getProductData(productId, (productData) => {
-      resolve(productData);
-    });
-  });
-
-  onValue(cartsRef, async (snapshot) => {
-    let cartEmpty = true; 
-    const promises = [];
-
-    snapshot.forEach((cart) => {
-      const cartData = cart.val();
-      const userId = cartData.userId;
-
-      if (currentUserId === userId) {
-        const productId = cartData.productId;
-        const quantity = cartData.quantity;
-
-        const productDataPromise = getProductDataPromise(productId);
-        promises.push(productDataPromise.then((productData) => {
-          const productPrice = productData.price;
-          totalPrice += quantity * productPrice;
-        }));
-
-        cartEmpty = false; 
-      }
-    });
-
-    await Promise.all(promises);
-
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
+  function calculateTotalPrice() {
+    const cartsRef = ref(db, "carts");
+    const currentUserId = localStorage.getItem('userId');
+  
+    onValue(cartsRef, async (snapshot) => {
+      let cartEmpty = true;
+      let totalPrice = 0;
+  
+      const cartPromises = [];
+  
+      snapshot.forEach((cart) => {
+        const cartData = cart.val();
+        const userId = cartData.userId;
+  
+        if (currentUserId === userId) {
+          const productId = cartData.productId;
+          const quantity = cartData.quantity;
+  
+          const productPromise = getProductDataPromise(productId);
+          cartPromises.push(productPromise.then((productData) => {
+            const productPrice = productData.price;
+            totalPrice += quantity * productPrice;
+          }));
+  
+          cartEmpty = false;
+        }
+      });
+  
+      await Promise.all(cartPromises);
+  
       if (cartEmpty) {
-      
         document.getElementById('totalPrice').textContent = "";
       } else {
-        
         document.getElementById('totalPrice').textContent = `₱${totalPrice.toFixed(2)}`;
       }
-    }, 300); 
-  });
-}
+    });
+  }
+  
+  // Utility function to get product data
+  function getProductDataPromise(productId) {
+    return new Promise((resolve, reject) => {
+      getProductData(productId, (productData) => {
+        resolve(productData);
+      });
+    });
+  }
+  
+  
 
 function getCount() {
   const cartsRef = ref(db, "carts");

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, onValue, remove, set } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import { getDatabase, ref, onValue, remove, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -17,7 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 
-function tableOrders() {
+async function tableOrders() {
   const orderTableContainer = document.getElementById('orderTable');
 
   if (!orderTableContainer) {
@@ -29,52 +29,82 @@ function tableOrders() {
 
   orderTableContainer.innerHTML = ""; // Clear the container
 
-  const userOrdersMap = new Map();
+  try {
+    const snapshot = await get(ordersRef);
 
-  onValue(ordersRef, (snapshot) => {
-    snapshot.forEach((order) => {
-      const orderData = order.val();
-      const userId = orderData.userId;
-      const productId = orderData.productId;
-      const quantity = orderData.quantity;
-      const orderId = order.key;
+    if (snapshot.exists()) {
+      const ordersData = snapshot.val();
 
-      // Fetch user name based on userId
-      getUserData(userId, (userData) => {
-        const userName = `${userData.firstname} ${userData.lastname}`;
+      // Flatten the nested structure into an array of orders
+      const ordersArray = Object.keys(ordersData).reduce((acc, userId) => {
+        const userOrders = ordersData[userId];
+        Object.keys(userOrders).forEach(orderId => {
+          acc.push({ userId, orderId, ...userOrders[orderId] });
+        });
+        return acc;
+      }, []);
 
-        // Check if the user already has an array to store orders
-        if (!userOrdersMap.has(userId)) {
-          userOrdersMap.set(userId, []);
-        }
+      const uniqueUserIds = [...new Set(ordersArray.map(order => order.userId))];
 
-        // Check if an order with the same product ID exists for the user
-        const existingOrderIndex = userOrdersMap.get(userId).findIndex((existingOrder) => existingOrder.productId === productId);
+      for (const userId of uniqueUserIds) {
+        const userOrders = ordersArray.filter(order => order.userId === userId);
 
-        if (existingOrderIndex !== -1) {
-          // If the order with the same product ID exists, update the quantity
-          userOrdersMap.get(userId)[existingOrderIndex].quantity += quantity;
-        } else {
-          // Otherwise, create a new order
-          getOrderData(productId, (productData) => {
-            userOrdersMap.get(userId).push({
-              productId,
-              orderId,
-              productName: productData.name,
-              quantity,
-              status: orderData.status
-            });
+        try {
+          const userData = await getUserData(userId);
 
-            // Check if all orders for the user have been processed
-            if (userOrdersMap.get(userId).length === userOrdersCount(userId, snapshot)) {
-              displayUserOrders(userId, userName, userOrdersMap.get(userId));
-              alert('Orders loaded successfully!');
+          if (userData) {
+            const userName = `${userData.firstname} ${userData.lastname}`;
+            const userOrdersMap = {};
+
+            for (const order of userOrders) {
+              const productId = order.productId;
+              const quantity = order.quantity;
+              const orderId = order.orderId;
+
+              if (!userOrdersMap[productId]) {
+                userOrdersMap[productId] = {
+                  productId,
+                  orderId,
+                  productName: await getProductName(productId),
+                  quantity,
+                  status: order.status
+                };
+              } else {
+                userOrdersMap[productId].quantity += quantity;
+              }
             }
-          });
+
+            displayUserOrders(userId, userName, Object.values(userOrdersMap));
+           
+            console.log('Orders loaded successfully for user:', userName);
+          } else {
+            // console.error(`User data for ID ${userId} is null or undefined`);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error.message);
         }
-      });
-    });
-  });
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching orders:", error.message);
+  }
+}
+
+async function getProductName(productId) {
+  const productsRef = ref(db, `products/${productId}`);
+  try {
+    const snapshot = await get(productsRef);
+
+    if (snapshot.exists()) {
+      return snapshot.val().name;
+    } else {
+      console.error(`Product with ID ${productId} not found`);
+      return "";
+    }
+  } catch (error) {
+    console.error("Error fetching product name:", error.message);
+    return "";
+  }
 }
 
 function userOrdersCount(userId, snapshot) {
@@ -98,12 +128,14 @@ async function displayUserOrders(userId, userName, orders) {
       <tr>
         <th scope="col">User Name</th>
         <th scope="col">User ID</th>
+        <th scope="col">Total Price</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td>${userName}</td>
         <td>${userId}</td>
+        <td class="totalPrice"></td>
       </tr>
     </tbody>
   `;
@@ -125,6 +157,7 @@ async function displayUserOrders(userId, userName, orders) {
     <tfoot>
       <tr>
         <td colspan="2"></td>
+        <td class="totalPriceCell"></td>
         <td>
           <select class="statusDropdown form-control" data-userId="${userId}">
             <option value="pending" ${orders.every(order => order.status === 'pending') ? 'selected' : ''}>Pending</option>
@@ -147,6 +180,14 @@ async function displayUserOrders(userId, userName, orders) {
   orderTableContainer.appendChild(userNameTable);
   orderTableContainer.appendChild(userOrderTable);
 
+  // Fetch and display total cart price from user's database
+  const userRef = ref(db, `users/${userId}`);
+  onValue(userRef, (snapshot) => {
+    const totalCartPriceCell = userNameTable.querySelector('.totalPrice');
+    const totalCartPrice = snapshot.val() ? snapshot.val().totalCartPrice || 0 : 0;
+    totalCartPriceCell.innerText = totalCartPrice;
+  });
+
   // Populate the user's orders table
   orders.forEach((order) => {
     const { orderId, productName, quantity, status } = order;
@@ -162,22 +203,57 @@ async function displayUserOrders(userId, userName, orders) {
     tbody.appendChild(row);
   });
 
-  // Add event listener for update button
-  const updateButton = tfoot.querySelector('.updateButton');
-  updateButton.addEventListener('click', async function () {
-    const statusDropdown = tfoot.querySelector('.statusDropdown');
-    const newStatus = statusDropdown.value;
 
-    // Handle the update action for all orders of the user
-    await Promise.all(orders.map(async (order) => {
-      const orderId = order.orderId;
-      // Update the status in the database
-      await set(ref(db, `orders/${orderId}/status`), newStatus);
-    }));
-    alert('Orders updated successfully!');
-  });
+// Add event listener for update button
+const updateButton = tfoot.querySelector('.updateButton');
+updateButton.addEventListener('click', async function () {
+  const statusDropdown = tfoot.querySelector('.statusDropdown');
+  const newStatus = statusDropdown.value;
+
+  // Check if the new status is "completed" before updating
+  if (newStatus === 'completed') {
+    try {
+      // Update the status for each order in the existing array
+      for (const order of Object.values(orders)) {
+        const orderId = order.orderId;
+
+        // Update the status in the database
+        await set(ref(db, `orders/${orderId}/status`), newStatus);
+
+        // Update the status directly within the orders array
+        order.status = newStatus;
+      }
+
+      // Use a more user-friendly approach to display success messages
+      console.log('Orders updated successfully for user:', userName);
+    } catch (error) {
+      console.error('Error updating orders:', error.message);
+    }
+  } else {
+    // Display a message or handle the case when the status is not "completed"
+    console.log('Please select "completed" status for updating orders.');
+  }
+});
+
+
+  // // Add event listener for update button
+  // const updateButton = tfoot.querySelector('.updateButton');
+  // updateButton.addEventListener('click', async function () {
+  //   const statusDropdown = tfoot.querySelector('.statusDropdown');
+  //   const newStatus = statusDropdown.value;
+
+  //   // Handle the update action for all orders of the user
+  //   await Promise.all(orders.map(async (order) => {
+  //     const orderId = order.orderId;
+  //     // Update the status in the database
+  //     await set(ref(db, `orders/${orderId}/status`), newStatus);
+  //   }));
+  //   // Use a more user-friendly approach to display success messages
+  //   console.log('Orders updated successfully for user:', userName);
+  // });
 
   // Add event listener for delete all button
+
   const deleteAllButton = tfoot.querySelector('.deleteAllButton');
   deleteAllButton.addEventListener('click', async function () {
     // Handle the delete action for all orders of the user
@@ -188,9 +264,13 @@ async function displayUserOrders(userId, userName, orders) {
     // Remove the entire user order table after deletion
     userOrderTable.remove();
     userNameTable.remove();
-    alert('Orders deleted successfully!');
+    // Use a more user-friendly approach to display success messages
+    console.log('Orders deleted successfully for user:', userName);
   });
 }
+
+
+
 
 function getOrderData(productId, callback) {
   const productsRef = ref(db, `products/${productId}`); // Assuming you have a "products" node in your database
@@ -205,17 +285,23 @@ function getOrderData(productId, callback) {
   });
 }
 
-function getUserData(userId, callback) {
+async function getUserData(userId) {
   const userRef = ref(db, `users/${userId}`);
 
-  onValue(userRef, (snapshot) => {
+  try {
+    const snapshot = await get(userRef);
+
     if (snapshot.exists()) {
       const userData = snapshot.val();
-      callback(userData);
+      return userData;
     } else {
-      console.error(`User with ID ${userId} not found`);
+      // console.error(`User with ID ${userId} not found`);
+      return null;
     }
-  });
+  } catch (error) {
+    console.error("Error fetching user data:", error.message);
+    return null;
+  }
 }
 
 window.addEventListener('load', tableOrders);
@@ -229,4 +315,3 @@ function signOut() {
 
 // Attach click event listener to the link
 document.getElementById("signOutLink").addEventListener("click", signOut);
-

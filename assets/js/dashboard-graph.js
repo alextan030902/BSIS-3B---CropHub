@@ -1,4 +1,3 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
@@ -18,48 +17,45 @@ const db = getDatabase(app);
 const ordersRef = ref(db, 'orders');
 const productsRef = ref(db, 'products');
 
-// Get the chart canvas and context
 const ctx = document.getElementById('myChart').getContext('2d');
 
-// Initialize an empty chart
 let myChart;
 
-// Listen for changes to the 'orders' node
 onValue(ordersRef, (snapshot) => {
   const orderData = snapshot.val();
 
   if (orderData) {
-    // Extract product quantities from orders
-    const productQuantities = Object.keys(orderData).map(orderId => {
-      const order = orderData[orderId];
-      return { id: order.productId, quantity: order.quantity || 0 };
+    const productQuantities = Object.keys(orderData).flatMap(orderId => {
+      const orderDetails = orderData[orderId];
+      const orderItems = Object.keys(orderDetails).map(itemId => {
+        const item = orderDetails[itemId];
+        return { id: item.productId, quantity: item.quantity || 0 };
+      });
+      return orderItems;
     });
 
-    // Listen for changes to the 'products' node
+    // Now, productQuantities contains an array of objects with id and quantity properties
+    console.log(productQuantities);
+
     onValue(productsRef, (productSnapshot) => {
       const productData = productSnapshot.val();
 
       if (productData) {
-        // Extract product names and create an array of objects with 'id' and 'name'
         const productNames = Object.keys(productData).map(productId => {
           return { id: productId, name: productData[productId].name };
         });
 
-        // Update chart labels and datasets
         createOrUpdateChart(productNames, productQuantities);
       }
     });
   }
 });
 
-// Function to create/update the chart
 function createOrUpdateChart(namesData, quantitiesData) {
   if (myChart) {
-    // If the chart already exists, destroy it first
     myChart.destroy();
   }
 
-  // Create a new chart
   myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -69,7 +65,6 @@ function createOrUpdateChart(namesData, quantitiesData) {
         backgroundColor: 'rgb(75, 192, 192)',
         borderColor: 'rgb(75, 192, 192)',
         borderWidth: 5
-
       }]
     },
     options: {
@@ -83,13 +78,7 @@ function createOrUpdateChart(namesData, quantitiesData) {
 }
 
 function signOut() {
-  // Perform any sign-out logic here (e.g., clearing session, etc.)
-
-  // Redirect to the login page
   window.location.href = "login.html";
 }
 
-// Attach click event listener to the link
 document.getElementById("signOutLink").addEventListener("click", signOut);
-
-
